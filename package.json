@@ -1,0 +1,15 @@
+{
+  "name": "scrapbox-cli",
+  "version": "1.0.0",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.5.3"
+  },
+  "scripts": {
+    "daily": "npx tsx src/index.ts daily",
+    "weekly": "npx tsx src/index.ts weekly"
+  },
+  "dependencies": {
+    "puppeteer": "^22.12.1"
+  }
+}
