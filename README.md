@@ -1,8 +1,34 @@
 # Scrapbox Write CLI
+
 This CLI tool allows you to write Scrapbox pages directly from your terminal.
 
-## How to use
-```bash
-yarn daily
-yarn weekly
-```
+## How to Use
+
+1. **Clone the Repository**
+    ```bash
+    git clone https://github.com/katayama8000/scrapbox-write-cli
+    cd scrapbox-write-cli
+    ```
+
+2. **Install Dependencies**
+    ```bash
+    yarn install
+    ```
+
+3. **Configure Environment Variables**
+    - Copy the `.env.dist` file to create a `.env` file:
+      ```bash
+      cp .env.dist .env
+      ```
+    - Get your Session ID from Scrapbox and set it in the `.env` file.
+
+4. **Run the CLI**
+    - For daily updates:
+      ```bash
+      yarn daily
+      ```
+    - For weekly updates:
+      ```bash
+      yarn weekly
+      ```
+
