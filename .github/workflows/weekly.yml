@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-daily-cli:
+  run-weekly-cli:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,7 +18,7 @@ jobs:
       uses: actions/setup-node@v4
 
     - name: Install dependencies
-      run: yarn install
+      run: yarn --frozen-lockfile
 
     - name: Run daily task
       run: yarn daily
