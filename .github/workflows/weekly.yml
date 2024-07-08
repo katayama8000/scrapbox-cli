@@ -20,5 +20,7 @@ jobs:
     - name: Install dependencies
       run: yarn --frozen-lockfile
 
-    - name: Run daily task
-      run: yarn daily
+    - name: Run the CLI
+      env:
+        SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
+      run: yarn weekly
