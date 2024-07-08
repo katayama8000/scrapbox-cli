@@ -1,3 +1,4 @@
+require('dotenv').config()
 import puppeteer, { type Page } from "puppeteer";
 
 const DAILY_TEXT = "[* ルーティン]\n[* 感想]\n#daily";
@@ -80,8 +81,6 @@ const main = async () => {
     const text = template === "daily" ? DAILY_TEXT : WEEKLY_TEXT;
 
     const sid = process.env.SCRAPBOX_SID;
-    console.log(process.env.AAA);
-    console.log(`SID: ${sid}`);
     if (!sid) {
         console.error("Please set the SCRAPBOX_SID environment variable.");
         process.exit(1);
