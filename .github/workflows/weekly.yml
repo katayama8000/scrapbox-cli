@@ -2,8 +2,8 @@ name: Weekly CLI
 
 on:
   schedule:
-    # Runs every Sunday at 10:00 JST (01:00 UTC)
-    - cron: '0 1 * * 0'
+    # Runs every Sunday at 11:00 JST (02:00 UTC)
+    - cron: '0 2 * * 0'
   workflow_dispatch:
 
 jobs:
