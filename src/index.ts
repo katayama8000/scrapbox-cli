@@ -1,7 +1,7 @@
 require("dotenv").config();
 import { launch, type Page } from "puppeteer";
 
-const DAILY_TEXT = "[* ルーティン]\n[* 感想]\n#daily";
+const DAILY_TEXT = "[* ルーティン]\n[* 起床時間]\n[* 感想]\n#daily";
 const WEEKLY_TEXT = "[* 目標]\n[* 振り返り]\n[* 感想]\n[* 日記]\n#weekly";
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -18,7 +18,7 @@ const checkPageExists = async (project: string, title: string): Promise<boolean>
     }
 };
 
-const createScrapboxPage = async (page: Page, url: string) => {
+const createScrapboxPage = async (page: Page, url: string): Promise<void> => {
     try {
         await page.goto(url);
         await sleep(1000);
@@ -28,7 +28,7 @@ const createScrapboxPage = async (page: Page, url: string) => {
     }
 };
 
-const writeToScrapbox = async (sid: string, project: string, title: string, text: string) => {
+const writeToScrapbox = async (sid: string, project: string, title: string, text: string): Promise<void> => {
     const url = new URL(`https://scrapbox.io/${project}/${encodeURIComponent(title)}?body=${encodeURIComponent(text)}`);
     const browser = await launch({
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
