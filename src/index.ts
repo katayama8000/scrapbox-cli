@@ -1,63 +1,63 @@
-require('dotenv').config()
-import puppeteer, { type Page } from "puppeteer";
+require("dotenv").config();
+import { launch, type Page } from "puppeteer";
 
 const DAILY_TEXT = "[* ルーティン]\n[* 感想]\n#daily";
 const WEEKLY_TEXT = "[* 目標]\n[* 振り返り]\n[* 感想]\n[* 日記]\n#weekly";
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-const checkPageExists = async (page: Page, project: string, title: string) => {
-    await page.goto(
-        `https://scrapbox.io/api/pages/${project}/${encodeURIComponent(title)}/text`,
-    );
-    const content = await page.evaluate(() => document.body.innerText);
-    return content !== '{"name":"NotFoundError","message":"Page not found."}';
+const checkPageExists = async (project: string, title: string): Promise<boolean> => {
+    try {
+        const res = await fetch(`https://scrapbox.io/api/pages/${project}/${encodeURIComponent(title)}`);
+        if (!res.ok) {
+            return false;
+        }
+        return true;
+    } catch (error) {
+        throw new Error(`Failed to fetch page: ${error}`);
+    }
 };
 
 const createScrapboxPage = async (page: Page, url: string) => {
-    await page.goto(url);
-    await sleep(1000);
+    try {
+        await page.goto(url);
+        await sleep(1000);
+        console.log("Created Scrapbox page");
+    } catch (error) {
+        console.error("Failed to create Scrapbox page:", error);
+    }
 };
 
-const writeToScrapbox = async (
-    sid: string,
-    project: string,
-    title: string,
-    text: string,
-) => {
-    try {
-        const url = new URL(
-            `https://scrapbox.io/${project}/${encodeURIComponent(title)}?body=${encodeURIComponent(text)}`,
-        );
-        const browser = await puppeteer.launch({
-            args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        });
-        const page = await browser.newPage();
+const writeToScrapbox = async (sid: string, project: string, title: string, text: string) => {
+    const url = new URL(`https://scrapbox.io/${project}/${encodeURIComponent(title)}?body=${encodeURIComponent(text)}`);
+    const browser = await launch({
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+    const page = await browser.newPage();
 
+    try {
         await page.setCookie({
             name: "connect.sid",
             value: sid,
             domain: "scrapbox.io",
         });
 
-        const pageExists = await checkPageExists(page, project, title);
+        const pageExists = await checkPageExists(project, title);
         if (pageExists) {
             console.error(`Page "${title}" already exists.`);
-            await browser.close();
-            process.exit(1);
+            return;
         }
 
         await createScrapboxPage(page, url.toString());
-        await browser.close();
     } catch (error) {
         console.error("Failed to write to Scrapbox:", error);
+    } finally {
+        await browser.close();
     }
 };
 
 const generateTitles = () => {
-    const today = new Date(
-        Date.now() + (new Date().getTimezoneOffset() + 540) * 60 * 1000,
-    );
+    const today = new Date(Date.now() + (new Date().getTimezoneOffset() + 540) * 60 * 1000);
     const year = today.getFullYear();
     const month = today.getMonth() + 1;
     const date = today.getDate();
@@ -88,14 +88,7 @@ const main = async () => {
 
     console.log(`Writing to Scrapbox: ${title}...`);
 
-    await writeToScrapbox(
-        sid,
-        "katayama8000",
-        title,
-        text,
-    );
-
-    console.log("Done!");
+    await writeToScrapbox(sid, "katayama8000", title, text);
 };
 
 main().catch(console.error);
