@@ -6,12 +6,17 @@ const WEEKLY_TEXT = "[* 目標]\n[* 振り返り]\n[* 感想]\n[* 日記]\n#week
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const checkPageExists = async (page: Page, project: string, title: string) => {
-    await page.goto(
-        `https://scrapbox.io/api/pages/${project}/${encodeURIComponent(title)}/text`,
-    );
-    const content = await page.evaluate(() => document.body.innerText);
-    return content !== '{"name":"NotFoundError","message":"Page not found."}';
+const checkPageExists = async (project: string, title: string): Promise<boolean> => {
+    try {
+        const res = await fetch(`https://scrapbox.io/api/pages/${project}/${encodeURIComponent(title)}`);
+        if (!res.ok) {
+            console.error(`Failed to check page existence: ${res.status} ${res.statusText}`);
+            return false;
+        }
+        return true;
+    } catch (error) {
+        throw new Error("Error checking page existence");
+    }
 };
 
 const createScrapboxPage = async (page: Page, url: string) => {
@@ -40,7 +45,7 @@ const writeToScrapbox = async (
             domain: "scrapbox.io",
         });
 
-        const pageExists = await checkPageExists(page, project, title);
+        const pageExists = await checkPageExists(project, title);
         if (pageExists) {
             console.error(`Page "${title}" already exists.`);
             await browser.close();
@@ -95,7 +100,7 @@ const main = async () => {
         text,
     );
 
-    console.log("Done!");
+    console.log("Completed writing to Scrapbox.");
 };
 
 main().catch(console.error);
