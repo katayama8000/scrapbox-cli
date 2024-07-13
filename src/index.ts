@@ -1,5 +1,5 @@
-require('dotenv').config();
-import { launch, type Page } from 'puppeteer';
+require("dotenv").config();
+import { launch, type Page } from "puppeteer";
 
 const DAILY_TEXT = "[* ルーティン]\n[* 感想]\n#daily";
 const WEEKLY_TEXT = "[* 目標]\n[* 振り返り]\n[* 感想]\n[* 日記]\n#weekly";
@@ -22,7 +22,7 @@ const createScrapboxPage = async (page: Page, url: string) => {
     try {
         await page.goto(url);
         await sleep(1000);
-        console.log('Created Scrapbox page');
+        console.log("Created Scrapbox page");
     } catch (error) {
         console.error("Failed to create Scrapbox page:", error);
     }
@@ -31,15 +31,15 @@ const createScrapboxPage = async (page: Page, url: string) => {
 const writeToScrapbox = async (sid: string, project: string, title: string, text: string) => {
     const url = new URL(`https://scrapbox.io/${project}/${encodeURIComponent(title)}?body=${encodeURIComponent(text)}`);
     const browser = await launch({
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
 
     try {
         await page.setCookie({
-            name: 'connect.sid',
+            name: "connect.sid",
             value: sid,
-            domain: 'scrapbox.io',
+            domain: "scrapbox.io",
         });
 
         const pageExists = await checkPageExists(project, title);
@@ -77,8 +77,8 @@ const main = async () => {
 
     const template = process.argv[2];
     const { dailyTitle, weeklyTitle } = generateTitles();
-    const title = template === 'daily' ? dailyTitle : weeklyTitle;
-    const text = template === 'daily' ? DAILY_TEXT : WEEKLY_TEXT;
+    const title = template === "daily" ? dailyTitle : weeklyTitle;
+    const text = template === "daily" ? DAILY_TEXT : WEEKLY_TEXT;
 
     const sid = process.env.SCRAPBOX_SID;
     if (!sid) {
@@ -88,7 +88,7 @@ const main = async () => {
 
     console.log(`Writing to Scrapbox: ${title}...`);
 
-    await writeToScrapbox(sid, 'katayama8000', title, text);
+    await writeToScrapbox(sid, "katayama8000", title, text);
 };
 
 main().catch(console.error);
