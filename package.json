@@ -4,11 +4,12 @@
   "license": "MIT",
   "devDependencies": {
     "dotenv": "^16.4.5",
+    "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
   },
   "scripts": {
-    "daily": "npx tsx src/index.ts daily",
-    "weekly": "npx tsx src/index.ts weekly"
+    "daily": "ts-node src/index.ts daily",
+    "weekly": "ts-node src/index.ts weekly"
   },
   "dependencies": {
     "puppeteer": "^22.12.1"
