@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { launch, type Page } from "puppeteer";
 
 const DAILY_TEXT = "[* ルーティン]\n[* 起床時間]\n[* 感想]\n[* 明日すること]\n#daily";
-const WEEKLY_TEXT = "[* 目標]\n[* 振り返り]\n[* 感想]\n[* 日記]\n#weekly";
+const WEEKLY_TEXT = "[* 目標]\n[* 新しいこと]\n[* 振り返り]\n[* 感想]\n[* 日記]\n#weekly";
 
 const checkPageExists = async (project: string, title: string): Promise<boolean> => {
     try {
