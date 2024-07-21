@@ -12,6 +12,6 @@
     "weekly": "ts-node src/index.ts weekly"
   },
   "dependencies": {
-    "puppeteer": "^22.12.1"
+    "puppeteer": "^22.13.0"
   }
 }
