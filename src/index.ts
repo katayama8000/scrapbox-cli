@@ -1,10 +1,8 @@
-require("dotenv").config();
+import 'dotenv/config'
 import { launch, type Page } from "puppeteer";
 
-const DAILY_TEXT = "[* ルーティン]\n[* 起床時間]\n[* 感想]\n#daily";
+const DAILY_TEXT = "[* ルーティン]\n[* 起床時間]\n[* 感想]\n[* 明日すること]\n#daily";
 const WEEKLY_TEXT = "[* 目標]\n[* 振り返り]\n[* 感想]\n[* 日記]\n#weekly";
-
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const checkPageExists = async (project: string, title: string): Promise<boolean> => {
     try {
@@ -21,7 +19,6 @@ const checkPageExists = async (project: string, title: string): Promise<boolean>
 const createScrapboxPage = async (page: Page, url: string): Promise<void> => {
     try {
         await page.goto(url);
-        await sleep(1000);
         console.log("Created Scrapbox page");
     } catch (error) {
         console.error("Failed to create Scrapbox page:", error);
@@ -81,6 +78,7 @@ const main = async () => {
     const text = template === "daily" ? DAILY_TEXT : WEEKLY_TEXT;
 
     const sid = process.env.SCRAPBOX_SID;
+    console.log(`SID: ${sid}`);
     if (!sid) {
         console.error("Please set the SCRAPBOX_SID environment variable.");
         process.exit(1);
