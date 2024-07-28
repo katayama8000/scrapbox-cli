@@ -1,44 +1,58 @@
 import 'dotenv/config'
-import { launch, type Page } from "puppeteer";
+import { launch, type Page, type Browser } from "puppeteer";
 
-const DAILY_TEXT = "[* ルーティン]\n[* 起床時間]\n[* 感想]\n[* 明日すること]\n#daily";
-const WEEKLY_TEXT = "[* 目標]\n[* 新しいこと]\n[* 振り返り]\n[* 感想]\n[* 日記]\n#weekly";
+const TEMPLATES = {
+    daily: {
+        text: "[* ルーティン]\n[* 起床時間]\n[* 感想]\n[* 明日すること]\n#daily",
+        getTitleFn: (date: Date) => formatDate(date, 'yyyy/M/d (ddd)')
+    },
+    weekly: {
+        text: "[* 目標]\n[* 新しいこと]\n[* 振り返り]\n[* 感想]\n[* 日記]\n#weekly",
+        getTitleFn: (date: Date) => {
+            const endDate = new Date(date);
+            endDate.setDate(date.getDate() + 6);
+            return `${formatDate(date, 'yyyy/M/d')} ~ ${formatDate(endDate, 'yyyy/M/d')}`;
+        }
+    }
+};
+
+const formatDate = (date: Date, format: string): string => {
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    return format
+        .replace('yyyy', date.getFullYear().toString())
+        .replace('M', (date.getMonth() + 1).toString())
+        .replace('d', date.getDate().toString())
+        .replace('ddd', days[date.getDay()]);
+};
 
 const checkPageExists = async (project: string, title: string): Promise<boolean> => {
-    try {
-        const res = await fetch(`https://scrapbox.io/api/pages/${project}/${encodeURIComponent(title)}`);
-        if (!res.ok) {
-            return false;
-        }
-        return true;
-    } catch (error) {
-        throw new Error(`Failed to fetch page: ${error}`);
-    }
+    const res = await fetch(`https://scrapbox.io/api/pages/${project}/${encodeURIComponent(title)}`);
+    return res.ok;
 };
 
 const createScrapboxPage = async (page: Page, url: string): Promise<void> => {
-    try {
-        await page.goto(url);
-        console.log("Created Scrapbox page");
-    } catch (error) {
-        console.error("Failed to create Scrapbox page:", error);
-    }
+    await page.goto(url);
+    console.log("Created Scrapbox page");
 };
 
-const writeToScrapbox = async (sid: string, project: string, title: string, text: string): Promise<void> => {
-    const url = new URL(`https://scrapbox.io/${project}/${encodeURIComponent(title)}?body=${encodeURIComponent(text)}`);
+const initializeBrowser = async (sid: string): Promise<{ browser: Browser; page: Page }> => {
     const browser = await launch({
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
+    await page.setCookie({
+        name: "connect.sid",
+        value: sid,
+        domain: "scrapbox.io",
+    });
+    return { browser, page };
+};
+
+const writeToScrapbox = async (sid: string, project: string, title: string, text: string): Promise<void> => {
+    const url = new URL(`https://scrapbox.io/${project}/${encodeURIComponent(title)}?body=${encodeURIComponent(text)}`);
+    const { browser, page } = await initializeBrowser(sid);
 
     try {
-        await page.setCookie({
-            name: "connect.sid",
-            value: sid,
-            domain: "scrapbox.io",
-        });
-
         const pageExists = await checkPageExists(project, title);
         if (pageExists) {
             console.error(`Page "${title}" already exists.`);
@@ -46,39 +60,23 @@ const writeToScrapbox = async (sid: string, project: string, title: string, text
         }
 
         await createScrapboxPage(page, url.toString());
-    } catch (error) {
-        console.error("Failed to write to Scrapbox:", error);
     } finally {
         await browser.close();
     }
 };
 
-const generateTitles = () => {
-    const today = new Date(Date.now() + (new Date().getTimezoneOffset() + 540) * 60 * 1000);
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1;
-    const date = today.getDate();
-    const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][today.getDay()];
-
-    const dailyTitle = `${year}/${month}/${date} (${day})`;
-    const weeklyTitle = `${year}/${month}/${date} ~ ${year}/${month}/${date + 6}`;
-
-    return { dailyTitle, weeklyTitle };
-};
-
 const main = async () => {
-    if (process.argv.length !== 3) {
+    const templateType = process.argv[2] as keyof typeof TEMPLATES;
+    if (!templateType || !TEMPLATES[templateType]) {
         console.error("Usage: yarn <daily|weekly>");
         process.exit(1);
     }
 
-    const template = process.argv[2];
-    const { dailyTitle, weeklyTitle } = generateTitles();
-    const title = template === "daily" ? dailyTitle : weeklyTitle;
-    const text = template === "daily" ? DAILY_TEXT : WEEKLY_TEXT;
+    const template = TEMPLATES[templateType];
+    const today = new Date(Date.now() + (new Date().getTimezoneOffset() + 540) * 60 * 1000);
+    const title = template.getTitleFn(today);
 
     const sid = process.env.SCRAPBOX_SID;
-    console.log(`SID: ${sid}`);
     if (!sid) {
         console.error("Please set the SCRAPBOX_SID environment variable.");
         process.exit(1);
@@ -86,7 +84,11 @@ const main = async () => {
 
     console.log(`Writing to Scrapbox: ${title}...`);
 
-    await writeToScrapbox(sid, "katayama8000", title, text);
+    try {
+        await writeToScrapbox(sid, "katayama8000", title, template.text);
+    } catch (error) {
+        console.error("Failed to write to Scrapbox:", error);
+    }
 };
 
 main().catch(console.error);
