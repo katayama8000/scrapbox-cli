@@ -30,21 +30,13 @@ const checkPageExists = async (project: string, title: string): Promise<boolean>
     return res.ok;
 };
 
-const createScrapboxPage = async (page: Page, url: string): Promise<void> => {
-    await page.goto(url);
-    console.log("Created Scrapbox page");
-};
 
 const initializeBrowser = async (sid: string): Promise<{ browser: Browser; page: Page }> => {
     const browser = await launch({
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
-    await page.setCookie({
-        name: "connect.sid",
-        value: sid,
-        domain: "scrapbox.io",
-    });
+    await page.setCookie({ name: 'connect.sid', value: sid, domain: 'scrapbox.io' });
     return { browser, page };
 };
 
@@ -52,17 +44,14 @@ const writeToScrapbox = async (sid: string, project: string, title: string, text
     const url = new URL(`https://scrapbox.io/${project}/${encodeURIComponent(title)}?body=${encodeURIComponent(text)}`);
     const { browser, page } = await initializeBrowser(sid);
 
-    try {
-        const pageExists = await checkPageExists(project, title);
-        if (pageExists) {
-            console.error(`Page "${title}" already exists.`);
-            return;
-        }
-
-        await createScrapboxPage(page, url.toString());
-    } finally {
-        await browser.close();
+    if (await checkPageExists(project, title)) {
+        console.log(`Page already exists: ${title}`);
+        throw new Error("Page already exists");
     }
+    await page.goto(url.toString());
+    await new Promise<void>((resolve) => setTimeout(() => resolve(), 1000));
+    await browser.close();
+    console.log('Wrote to Scrapbox');
 };
 
 const main = async () => {
@@ -85,7 +74,7 @@ const main = async () => {
     console.log(`Writing to Scrapbox: ${title}...`);
 
     try {
-        await writeToScrapbox(sid, "katayama8000", title, template.text);
+        await writeToScrapbox(sid, 'katayama8000', title, template.text);
     } catch (error) {
         console.error("Failed to write to Scrapbox:", error);
     }
