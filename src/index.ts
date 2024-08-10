@@ -1,13 +1,58 @@
 import 'dotenv/config'
 import { launch, type Page, type Browser } from "puppeteer";
 
+type TextFormat = "link" | "strong" | "italic" | "strike" | "plain";
+
+type TextItem = {
+    content: string;
+    format: TextFormat;
+}
+
+const formatTextItems = (items: TextItem[]): string => {
+    return items.map(({ content, format }) => {
+        switch (format) {
+            case "link":
+                return `#${content}`;
+            case "strong":
+                return `[* ${content}]`;
+            case "italic":
+                return `[/ ${content}]`;
+            case "strike":
+                return `[  ${content}]`;
+            case "plain":
+                return content;
+            default: {
+                const exhaustiveCheck: never = format;
+                throw new Error(`Unsupported format: ${exhaustiveCheck}`);
+            }
+        }
+    }).join('\n');
+};
+
 const TEMPLATES = {
     daily: {
-        text: "[* ルーティン]\n[* 起床時間]\n[* 感想]\n[* 明日すること]\n#daily",
+        text: formatTextItems([
+            { content: "ルーティン", format: "strong" },
+            { content: "外に出る", format: "plain" },
+            { content: "水を飲む", format: "plain" },
+            { content: "シャワーを浴びる", format: "plain" },
+            { content: "起床時間", format: "strong" },
+            { content: "感想", format: "strong" },
+            { content: "明日すること", format: "strong" },
+            { content: "日記", format: "strong" },
+            { content: "#daily", format: "link" }
+        ]),
         getTitleFn: (date: Date) => formatDate(date, 'yyyy/M/d (ddd)')
     },
     weekly: {
-        text: "[* 目標]\n[* 新しいこと]\n[* 振り返り]\n[* 感想]\n[* 日記]\n#weekly",
+        text: formatTextItems([
+            { content: "目標", format: "strong" },
+            { content: "新しいこと", format: "strong" },
+            { content: "振り返り", format: "strong" },
+            { content: "感想", format: "strong" },
+            { content: "日記", format: "strong" },
+            { content: "#weekly", format: "link" }
+        ]),
         getTitleFn: (date: Date) => {
             const endDate = new Date(date);
             endDate.setDate(date.getDate() + 6);
@@ -51,7 +96,7 @@ const writeToScrapbox = async (sid: string, project: string, title: string, text
     await page.goto(url.toString());
     await new Promise<void>((resolve) => setTimeout(() => resolve(), 1000));
     await browser.close();
-    console.log('Wrote to Scrapbox');
+    console.log('Successfully written to Scrapbox:', title);
 };
 
 const main = async () => {
