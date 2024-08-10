@@ -40,7 +40,7 @@ const TEMPLATES = {
             { content: "感想", format: "strong" },
             { content: "明日すること", format: "strong" },
             { content: "日記", format: "strong" },
-            { content: "#daily", format: "link" }
+            { content: "daily", format: "link" }
         ]),
         getTitleFn: (date: Date) => formatDate(date, 'yyyy/M/d (ddd)')
     },
@@ -51,7 +51,7 @@ const TEMPLATES = {
             { content: "振り返り", format: "strong" },
             { content: "感想", format: "strong" },
             { content: "日記", format: "strong" },
-            { content: "#weekly", format: "link" }
+            { content: "weekly", format: "link" }
         ]),
         getTitleFn: (date: Date) => {
             const endDate = new Date(date);
