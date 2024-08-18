@@ -59,7 +59,7 @@ const TEMPLATES = {
             const startDate = date
             startDate.setDate(date.getDate() + 1);
             const endDate = new Date(date);
-            endDate.setDate(date.getDate() + 7);
+            endDate.setDate(date.getDate() + 6);
             return `${formatDate(startDate, "yyyy/M/d")} ~ ${formatDate(endDate, "yyyy/M/d")}`;
         },
     },
