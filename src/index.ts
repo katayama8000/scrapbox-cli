@@ -8,7 +8,7 @@ type TextItem = {
     format: TextFormat;
 };
 
-const formatTextItems = (items: TextItem[]): string => {
+const templateBuilder = (items: TextItem[]): string => {
     return items
         .map(({ content, format }) => {
             switch (format) {
@@ -33,7 +33,7 @@ const formatTextItems = (items: TextItem[]): string => {
 
 const TEMPLATES = {
     daily: {
-        text: formatTextItems([
+        text: templateBuilder([
             { content: "ルーティン", format: "strong" },
             { content: "9:00までに始動", format: "plain" },
             { content: "水を飲む", format: "plain" },
@@ -48,7 +48,7 @@ const TEMPLATES = {
         getTitleFn: (date: Date) => formatDate(date, "yyyy/M/d (ddd)"),
     },
     weekly: {
-        text: formatTextItems([
+        text: templateBuilder([
             { content: "目標", format: "strong" },
             { content: "新しいこと", format: "strong" },
             { content: "振り返り", format: "strong" },
@@ -112,7 +112,7 @@ const writeToScrapbox = async (
     const { browser, page } = await initializeBrowser(sid);
 
     if (await checkPageExists(project, title)) {
-        console.log(`Page already exists: ${title}`);
+        console.error(`Page already exists: ${title}`);
         throw new Error("Page already exists");
     }
     await page.goto(url.toString());
