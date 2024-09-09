@@ -2,7 +2,7 @@
 
 This CLI tool allows you to write Scrapbox pages directly from your terminal.
 
-## How to Use
+## Usage
 
 1. **Clone the Repository**
     ```bash
@@ -31,4 +31,5 @@ This CLI tool allows you to write Scrapbox pages directly from your terminal.
       ```bash
       yarn weekly
       ```
+    I highly recommend running the CLI on github actions.
 
