@@ -36,10 +36,6 @@ const TEMPLATES = {
         text: templateBuilder([
             { content: "ルーティン", format: "strong" },
             { content: "9:00までに始動", format: "plain" },
-            { content: "水を飲む", format: "plain" },
-            { content: "外に出る", format: "plain" },
-            { content: "シャワーを浴びる", format: "plain" },
-            { content: "ストレッチ", format: "plain" },
             { content: "起床時間", format: "strong" },
             { content: "感想", format: "strong" },
             { content: "明日すること", format: "strong" },
@@ -52,6 +48,7 @@ const TEMPLATES = {
             { content: "目標", format: "strong" },
             { content: "新しいこと", format: "strong" },
             { content: "振り返り", format: "strong" },
+            { content: "2/week ジムに行く", format: "plain" },
             { content: "感想", format: "strong" },
             { content: "日記", format: "strong" },
             { content: "weekly", format: "link" },
