@@ -2,6 +2,7 @@ import "dotenv/config";
 import { launch, type Page, type Browser } from "puppeteer";
 import { formatDate } from "./libs/formatDate";
 import { type Dayjs, dayjs } from "./libs/dayJs";
+import { CosenseClient } from "@katayama8000/cosense-client/mod";
 
 type TextFormat = "link" | "strong" | "italic" | "strike" | "plain";
 
@@ -67,10 +68,8 @@ const checkPageExists = async (
     project: string,
     title: string,
 ): Promise<boolean> => {
-    const res = await fetch(
-        `https://scrapbox.io/api/pages/${project}/${encodeURIComponent(title)}`,
-    );
-    return res.ok;
+    const client = CosenseClient(project);
+    return await client.checkPageExist(title);
 };
 
 const initializeBrowser = async (
