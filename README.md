@@ -1,4 +1,4 @@
-# Scrapbox Write CLI
+# Scrapbox CLI
 
 This CLI tool allows you to Scrapbox pages directly from your terminal.
 
