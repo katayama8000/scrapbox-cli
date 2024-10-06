@@ -2,15 +2,13 @@ import { formatDate } from "./libs/formatDate";
 import type { PageResponse } from "./types/PageResponse";
 
 // Asynchronous function: Fetches the average wake-up time for the week from Scrapbox API
-const getAverageWeeklyWakeUpTime = async (
-    pageDate: string,
-): Promise<string> => {
+const getWakeUpTime = async (pageDate: string): Promise<string> => {
     const pageUrl = `https://scrapbox.io/api/pages/katayama8000/${encodeURIComponent(pageDate)}`;
 
     try {
         const res = await fetch(pageUrl);
         if (!res.ok) {
-            throw new Error(`Failed to fetch the page: ${res.statusText}`);
+            console.error(`No page found for ${pageDate}`);
         }
         const data: PageResponse = await res.json();
         const lines = data.lines;
@@ -27,25 +25,42 @@ const getAverageWeeklyWakeUpTime = async (
     }
 };
 
-const buildThisWeekPageTitle = (date: Date): string[] => {
-    const week = [];
+const buildThisWeeksPageTitle = (date: Date): string[] => {
+    const week: string[] = [];
 
-    // Calculate the start of the week (Monday) based on the current date
-    const startOfWeek = new Date("2024-10-010T00:00:00.000Z");
-    console.log(date.getDate());
-    console.log(date.getDay());
-    console.log((date.getDay() + 6) % 7);
-    startOfWeek.setDate(date.getDate() - ((date.getDay() + 6) % 7)); // Adjust to get the Monday of the current week
+    const startOfWeek = new Date(date);
+    startOfWeek.setDate(date.getDate() - date.getDay() + 1);
 
-    // Loop through the week from Monday to Sunday
-    for (let i = 0; i < 7; i++) {
-        const day = new Date(startOfWeek);
-        day.setDate(startOfWeek.getDate() + i); // Set the date for the week
-        week.push(formatDate(day, "yyyy/M/d (ddd)")); // Format the date
-    }
+    Array.from({ length: 7 }).forEach((_, i) => {
+        const currentDate = new Date(startOfWeek);
+        currentDate.setDate(startOfWeek.getDate() + i);
+        const pageTitle = formatDate(currentDate, "yyyy/M/d (ddd)");
+        week.push(pageTitle);
+    });
 
     return week;
 };
 
+const main = async () => {
+    const date = new Date();
+    date.setDate(date.getDate() - 1);
+    const thisWeeksPageTitles = buildThisWeeksPageTitle(date);
 
+    const wakeUpTimes = await Promise.all(
+        thisWeeksPageTitles.map((pageTitle) => getWakeUpTime(pageTitle)),
+    );
+    console.log("Wake-up times for the week:", wakeUpTimes);
+    const filteredWakeUpTimes = wakeUpTimes.filter((time) => !time.includes("Error"));
+    const parseMinutesToNumber = (time: string): number => {
+        const [hour, minute] = time.split(":").map(Number);
+        return hour + minute / 60;
+    }
 
+    const averageWakeUpTime =
+        filteredWakeUpTimes.reduce((acc, time) => acc + parseMinutesToNumber(time), 0) /
+        filteredWakeUpTimes.length;
+
+    console.log("Average wake-up time for the week:", averageWakeUpTime);
+};
+
+main().catch(console.error);
