@@ -1,6 +1,6 @@
 # Scrapbox Write CLI
 
-This CLI tool allows you to write Scrapbox pages directly from your terminal.
+This CLI tool allows you to Scrapbox pages directly from your terminal.
 
 ## Usage
 
