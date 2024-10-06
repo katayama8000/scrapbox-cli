@@ -51,7 +51,6 @@ const TEMPLATES = {
             { content: "目標", format: "strong" },
             { content: "新しいこと", format: "strong" },
             { content: "振り返り", format: "strong" },
-            { content: "2/week ジムに行く", format: "plain" },
             { content: "感想", format: "strong" },
             { content: "日記", format: "strong" },
             { content: "weekly", format: "link" },
