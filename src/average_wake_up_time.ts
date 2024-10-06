@@ -43,8 +43,6 @@ const calculateAverageWakeUpTime = (times: string[]): number => {
 
 const main = async () => {
     const date = new Date();
-    date.setDate(date.getDate() - 1);
-
     const thisWeeksPageTitles = buildThisWeeksPageTitle(date);
     const wakeUpTimes = await Promise.all(thisWeeksPageTitles.map(fetchWakeUpTime));
     const filteredWakeUpTimes = wakeUpTimes.filter(time => !time.includes("Error"));
