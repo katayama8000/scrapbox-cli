@@ -9,7 +9,8 @@
   },
   "scripts": {
     "daily": "ts-node src/blog.ts daily",
-    "weekly": "ts-node src/blog.ts weekly"
+    "weekly": "ts-node src/blog.ts weekly",
+    "wake": "ts-node src/average_wake_up_time.ts"
   },
   "dependencies": {
     "puppeteer": "^22.13.0"
