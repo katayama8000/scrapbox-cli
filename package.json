@@ -13,6 +13,7 @@
     "wake": "ts-node src/average_wake_up_time.ts"
   },
   "dependencies": {
+    "dayjs": "^1.11.13",
     "puppeteer": "^22.13.0"
   }
 }
