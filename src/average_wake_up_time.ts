@@ -1,17 +1,11 @@
 import { dayjs } from "./libs/dayJs";
 import { formatDate } from "./libs/formatDate";
-import type { PageResponse } from "./types/PageResponse";
+import { CosenseClient } from "@katayama8000/cosense-client/mod";
 
 const fetchWakeUpTime = async (pageDate: string): Promise<string> => {
-    const pageUrl = `https://scrapbox.io/api/pages/katayama8000/${encodeURIComponent(pageDate)}`;
+    const client = CosenseClient("katayama8000");
+    const data = await client.getPage(pageDate);
 
-    const res = await fetch(pageUrl);
-    if (!res.ok) {
-        console.error(`No page found for ${pageDate}`);
-        return "Error fetching wake-up time";
-    }
-
-    const data: PageResponse = await res.json();
     const index = data.lines.findIndex(line => line.text.includes("起床時間"));
 
     if (index === -1 || !data.lines[index + 1]) {
