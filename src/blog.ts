@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { launch, type Page, type Browser } from "puppeteer";
-import { formatDateForDayjs } from "./libs/formatDate";
+import { formatDate } from "./libs/formatDate";
 import { type Dayjs, dayjs } from "./libs/dayJs";
 
 type TextFormat = "link" | "strong" | "italic" | "strike" | "plain";
@@ -43,7 +43,7 @@ const TEMPLATES = {
             { content: "明日すること", format: "strong" },
             { content: "daily", format: "link" },
         ]),
-        getTitleFn: (date: Dayjs) => formatDateForDayjs(date, "yyyy/M/d (ddd)")
+        getTitleFn: (date: Dayjs) => formatDate(date, "yyyy/M/d (ddd)")
     },
     weekly: {
         text: templateBuilder([
@@ -58,7 +58,7 @@ const TEMPLATES = {
         getTitleFn: (date: Dayjs) => {
             const startOfWeek = date.add(1, "day");
             const endOfWeek = startOfWeek.add(6, "day");
-            return `${formatDateForDayjs(startOfWeek, "yyyy/M/d")} ~ ${formatDateForDayjs(endOfWeek, "yyyy/M/d")}`;
+            return `${formatDate(startOfWeek, "yyyy/M/d")} ~ ${formatDate(endOfWeek, "yyyy/M/d")}`;
         },
     },
 };

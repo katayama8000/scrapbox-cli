@@ -1,5 +1,5 @@
 import { dayjs } from "./libs/dayJs";
-import { formatDate, formatDateForDayjs } from "./libs/formatDate";
+import { formatDate } from "./libs/formatDate";
 import type { PageResponse } from "./types/PageResponse";
 
 const fetchWakeUpTime = async (pageDate: string): Promise<string> => {
@@ -27,7 +27,7 @@ const buildThisWeeksPageTitle = (): string[] => {
     const startOfWeek = today.subtract(date, "day")
     return Array.from({ length: 7 }, (_, i) => {
         const currentDate = startOfWeek.add(i, "day");
-        return formatDateForDayjs(currentDate, "yyyy/M/d (ddd)");
+        return formatDate(currentDate, "yyyy/M/d (ddd)");
     });
 };
 
