@@ -1,4 +1,5 @@
-import { formatDate } from "./libs/formatDate";
+import { dayjs } from "./libs/dayJs";
+import { formatDate, formatDateForDayjs } from "./libs/formatDate";
 import type { PageResponse } from "./types/PageResponse";
 
 const fetchWakeUpTime = async (pageDate: string): Promise<string> => {
@@ -20,14 +21,13 @@ const fetchWakeUpTime = async (pageDate: string): Promise<string> => {
     return data.lines[index + 1].text;
 };
 
-const buildThisWeeksPageTitle = (date: Date): string[] => {
-    const startOfWeek = new Date(date);
-    startOfWeek.setDate(date.getDate() - (date.getDay() + 6) % 7);
-
+const buildThisWeeksPageTitle = (): string[] => {
+    const today = dayjs()
+    const date = today.date()
+    const startOfWeek = today.subtract(date, "day")
     return Array.from({ length: 7 }, (_, i) => {
-        const currentDate = new Date(startOfWeek);
-        currentDate.setDate(startOfWeek.getDate() + i);
-        return formatDate(currentDate, "yyyy/M/d (ddd)");
+        const currentDate = startOfWeek.add(i, "day");
+        return formatDateForDayjs(currentDate, "yyyy/M/d (ddd)");
     });
 };
 
@@ -42,10 +42,11 @@ const calculateAverageWakeUpTime = (times: string[]): number => {
 };
 
 const main = async () => {
-    const date = new Date();
-    const thisWeeksPageTitles = buildThisWeeksPageTitle(date);
+    const thisWeeksPageTitles = buildThisWeeksPageTitle();
+    console.log("This week's page titles:", thisWeeksPageTitles);
     const wakeUpTimes = await Promise.all(thisWeeksPageTitles.map(fetchWakeUpTime));
     const filteredWakeUpTimes = wakeUpTimes.filter(time => !time.includes("Error"));
+    console.log("Wake-up times for the week:", filteredWakeUpTimes);
 
 
     const averageWakeUpTime = calculateAverageWakeUpTime(filteredWakeUpTimes);
