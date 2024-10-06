@@ -8,8 +8,8 @@
     "typescript": "^5.5.3"
   },
   "scripts": {
-    "daily": "ts-node src/index.ts daily",
-    "weekly": "ts-node src/index.ts weekly"
+    "daily": "ts-node src/blog.ts daily",
+    "weekly": "ts-node src/blog.ts weekly"
   },
   "dependencies": {
     "puppeteer": "^22.13.0"
