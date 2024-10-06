@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { launch, type Page, type Browser } from "puppeteer";
 import { formatDate } from "./libs/formatDate";
+import { type Dayjs, dayjs } from "./libs/dayJs";
 
 type TextFormat = "link" | "strong" | "italic" | "strike" | "plain";
 
@@ -42,7 +43,7 @@ const TEMPLATES = {
             { content: "明日すること", format: "strong" },
             { content: "daily", format: "link" },
         ]),
-        getTitleFn: (date: Date) => formatDate(date, "yyyy/M/d (ddd)"),
+        getTitleFn: (date: Dayjs) => formatDate(date, "yyyy/M/d (ddd)")
     },
     weekly: {
         text: templateBuilder([
@@ -54,12 +55,10 @@ const TEMPLATES = {
             { content: "日記", format: "strong" },
             { content: "weekly", format: "link" },
         ]),
-        getTitleFn: (date: Date) => {
-            const startDate = new Date(date);
-            startDate.setDate(date.getDate() + 1);
-            const endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + 6);
-            return `${formatDate(startDate, "yyyy/M/d")} ~ ${formatDate(endDate, "yyyy/M/d")}`;
+        getTitleFn: (date: Dayjs) => {
+            const startOfWeek = date.add(1, "day");
+            const endOfWeek = startOfWeek.add(6, "day");
+            return `${formatDate(startOfWeek, "yyyy/M/d")} ~ ${formatDate(endOfWeek, "yyyy/M/d")}`;
         },
     },
 };
@@ -118,9 +117,7 @@ const main = async () => {
     }
 
     const template = TEMPLATES[templateType];
-    const today = new Date(
-        Date.now() + (new Date().getTimezoneOffset() + 540) * 60 * 1000,
-    );
+    const today = dayjs();
     const title = template.getTitleFn(today);
 
     const sid = process.env.SCRAPBOX_SID;
