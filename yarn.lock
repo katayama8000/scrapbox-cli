@@ -50,10 +50,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@katayama8000/cosense-client@npm:@jsr/katayama8000__cosense-client":
-  version "0.1.2"
-  resolved "https://npm.jsr.io/~/11/@jsr/katayama8000__cosense-client/0.1.2.tgz#65E0BC5C87FEA1949E15C810511E883EAE9018A6"
-  integrity sha512-j2Hv+y3GufDxH7Xc6xP3fWyGS5vHzhqZlEfQVCOUXyqqGkopVD5/0XVPHhXrB49eZKixTiPkSViRG7ZwXKVcQw==
+"@katayama8000/cosense-client@npm:@jsr/katayama8000__cosense-client@0.1.6":
+  version "0.1.6"
+  resolved "https://npm.jsr.io/~/11/@jsr/katayama8000__cosense-client/0.1.6.tgz#5D7DEB31C502C808D9AB87B87F163E641C978CA4"
+  integrity sha512-j0xebBfNRGm5Lt424hqss788/AnGKv1DnpeY06WvbR9w6lFFiOaH7S+iM/SFLVyjPgES+zsPAzxnlyKhNIdewg==
 
 "@puppeteer/browsers@2.2.3":
   version "2.2.3"

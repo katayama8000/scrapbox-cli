@@ -1,9 +1,8 @@
 import { dayjs } from "./libs/dayJs";
 import { formatDate } from "./libs/formatDate";
-import { CosenseClient } from "@katayama8000/cosense-client/mod";
 
 const fetchWakeUpTime = async (pageDate: string): Promise<string> => {
-    const client = CosenseClient("katayama8000");
+    const client = (await import("@katayama8000/cosense-client")).CosenseClient("katayama8000");
     const data = await client.getPage(pageDate);
 
     const index = data.lines.findIndex(line => line.text.includes("起床時間"));
