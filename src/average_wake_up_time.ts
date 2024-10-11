@@ -4,9 +4,7 @@ import { formatDate } from "./libs/formatDate";
 const fetchWakeUpTime = async (pageDate: string): Promise<string> => {
     const client = (await import("@katayama8000/cosense-client")).CosenseClient("katayama8000");
     const data = await client.getPage(pageDate);
-
     const index = data.lines.findIndex(line => line.text.includes("起床時間"));
-
     if (index === -1 || !data.lines[index + 1]) {
         return "Error fetching wake-up time";
     }
