@@ -66,10 +66,8 @@ const checkPageExists = async (
     project: string,
     title: string,
 ): Promise<boolean> => {
-    const res = await fetch(
-        `https://scrapbox.io/api/pages/${project}/${encodeURIComponent(title)}`,
-    );
-    return res.ok;
+    const client = (await import("@katayama8000/cosense-client")).CosenseClient(project);
+    return await client.checkPageExist(title);
 };
 
 const initializeBrowser = async (
