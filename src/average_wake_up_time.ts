@@ -3,19 +3,25 @@ import { formatDate } from "./libs/formatDate";
 
 const fetchWakeUpTime = async (pageDate: string): Promise<string> => {
     const client = (await import("@katayama8000/cosense-client")).CosenseClient("katayama8000");
-    const data = await client.getPage(pageDate);
-    const index = data.lines.findIndex(line => line.text.includes("起床時間"));
-    if (index === -1 || !data.lines[index + 1]) {
+
+    try {
+        const data = await client.getPage(pageDate);
+        const index = data.lines.findIndex(line => line.text.includes("起床時間"));
+        if (index === -1 || !data.lines[index + 1]) {
+            return "Error fetching wake-up time";
+        }
+        return data.lines[index + 1].text;
+    }
+    catch (e) {
         return "Error fetching wake-up time";
     }
-
-    return data.lines[index + 1].text;
 };
 
 const buildThisWeeksPageTitle = (): string[] => {
     const today = dayjs()
-    const date = today.date()
-    const startOfWeek = today.subtract(date, "day")
+    const day = today.day()
+    const startOfWeek = today.subtract(day - 1, "day")
+    console.log("startOfWeek", startOfWeek)
     return Array.from({ length: 7 }, (_, i) => {
         const currentDate = startOfWeek.add(i, "day");
         return formatDate(currentDate, "yyyy/M/d (ddd)");
@@ -34,10 +40,12 @@ const calculateAverageWakeUpTime = (times: string[]): number => {
 
 const main = async () => {
     const thisWeeksPageTitles = buildThisWeeksPageTitle();
+
     const wakeUpTimes = await Promise.all(thisWeeksPageTitles.map(fetchWakeUpTime));
     const filteredWakeUpTimes = wakeUpTimes.filter(time => !time.includes("Error"));
 
     const averageWakeUpTime = calculateAverageWakeUpTime(filteredWakeUpTimes);
+    console.log("this week page title", thisWeeksPageTitles);
     console.log("Average wake-up time for the week:", averageWakeUpTime);
 };
 

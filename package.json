@@ -13,8 +13,8 @@
     "wake": "ts-node src/average_wake_up_time.ts"
   },
   "dependencies": {
-    "@katayama8000/cosense-client": "npm:@jsr/katayama8000__cosense-client@0.1.6",
+    "@katayama8000/cosense-client": "npm:@jsr/katayama8000__cosense-client",
     "dayjs": "^1.11.13",
-    "puppeteer": "^22.13.0"
+    "puppeteer": "23.5.3"
   }
 }
