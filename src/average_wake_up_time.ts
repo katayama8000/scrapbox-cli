@@ -21,7 +21,6 @@ const buildThisWeeksPageTitle = (): string[] => {
     const today = dayjs()
     const day = today.day()
     const startOfWeek = today.subtract(day - 1, "day")
-    console.log("startOfWeek", startOfWeek)
     return Array.from({ length: 7 }, (_, i) => {
         const currentDate = startOfWeek.add(i, "day");
         return formatDate(currentDate, "yyyy/M/d (ddd)");
