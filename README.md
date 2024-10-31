@@ -1,8 +1,8 @@
 # Scrapbox CLI
 
-This CLI tool allows you to Scrapbox pages directly from your terminal.
+This CLI allows you to controle Scrapbox  directly from your terminal.
 
-## Usage
+## Setup and Usage
 
 1. **Clone the Repository**
     ```bash
@@ -15,14 +15,13 @@ This CLI tool allows you to Scrapbox pages directly from your terminal.
     yarn install
     ```
 
-3. **Configure Environment Variables**
-    - Copy the `.env.dist` file to create a `.env` file:
+3. **Configure Environment**
+    - Copy `.env.dist` to `.env` and set your Scrapbox Session ID in `.env`:
       ```bash
       cp .env.dist .env
       ```
-    - Get your Session ID from Scrapbox and set it in the `.env` file.
 
-4. **Run the CLI**
+4. **Run Commands**
     - For daily updates:
       ```bash
       yarn daily
@@ -31,5 +30,5 @@ This CLI tool allows you to Scrapbox pages directly from your terminal.
       ```bash
       yarn weekly
       ```
-    I highly recommend running the CLI on github actions.
 
+> **Tip**: To automate, set up these commands to run on GitHub Actions.
