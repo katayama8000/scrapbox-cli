@@ -37,6 +37,8 @@ const TEMPLATES = {
     daily: {
         text: templateBuilder([
             { content: "ルーティン", format: "strong" },
+            { content: "水を飲む", format: "plain" },
+            { content: "外に出る", format: "plain" },
             { content: "9:00までに始動", format: "plain" },
             { content: "起床時間", format: "strong" },
             { content: "感想", format: "strong" },
