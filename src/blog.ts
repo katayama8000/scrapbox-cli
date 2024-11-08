@@ -2,6 +2,7 @@ import "dotenv/config";
 import { launch, type Page, type Browser } from "puppeteer";
 import { formatDate } from "./libs/formatDate";
 import { type Dayjs, dayjs } from "./libs/dayJs";
+import { main as calculateAverageWakeUpTime } from "./average_wake_up_time";
 
 type TextFormat = "link" | "strong" | "italic" | "strike" | "plain";
 
@@ -48,14 +49,19 @@ const TEMPLATES = {
         getTitleFn: (date: Dayjs) => formatDate(date, "yyyy/M/d (ddd)")
     },
     weekly: {
-        text: templateBuilder([
-            { content: "目標", format: "strong" },
-            { content: "新しいこと", format: "strong" },
-            { content: "振り返り", format: "strong" },
-            { content: "感想", format: "strong" },
-            { content: "日記", format: "strong" },
-            { content: "weekly", format: "link" },
-        ]),
+        text: async () => {
+            const wakeUpTime = await calculateAverageWakeUpTime();
+            return templateBuilder([
+                { content: "先週の平均起床時間", format: "strong" },
+                { content: ` ${wakeUpTime.toString()}h`, format: "plain" },
+                { content: "目標", format: "strong" },
+                { content: "新しいこと", format: "strong" },
+                { content: "振り返り", format: "strong" },
+                { content: "感想", format: "strong" },
+                { content: "日記", format: "strong" },
+                { content: "weekly", format: "link" },
+            ]);
+        },
         getTitleFn: (date: Dayjs) => {
             const startOfWeek = date.add(1, "day");
             const endOfWeek = startOfWeek.add(6, "day");
@@ -91,10 +97,11 @@ const writeToScrapbox = async (
     sid: string,
     project: string,
     title: string,
-    text: string,
+    text: string | (() => Promise<string>)
 ): Promise<void> => {
-    const url = new URL(
-        `https://scrapbox.io/${project}/${encodeURIComponent(title)}?body=${encodeURIComponent(text)}`,
+    const bodyContent = typeof text === "function" ? await text() : text;
+    const scrapboxUrl = new URL(
+        `https://scrapbox.io/${project}/${encodeURIComponent(title)}?body=${encodeURIComponent(bodyContent)}`,
     );
     const { browser, page } = await initializeBrowser(sid);
 
@@ -102,7 +109,7 @@ const writeToScrapbox = async (
         console.error(`Page already exists: ${title}`);
         throw new Error("Page already exists");
     }
-    await page.goto(url.toString());
+    await page.goto(scrapboxUrl.toString());
     await new Promise<void>((resolve) => setTimeout(() => resolve(), 1000));
     await browser.close();
     console.log("Successfully written to Scrapbox:", title);
