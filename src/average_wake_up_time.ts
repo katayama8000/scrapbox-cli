@@ -37,7 +37,7 @@ const calculateAverageWakeUpTime = (times: string[]): number => {
     return totalMinutes / times.length;
 };
 
-const main = async () => {
+export const main = async () => {
     const thisWeeksPageTitles = buildThisWeeksPageTitle();
 
     const wakeUpTimes = await Promise.all(thisWeeksPageTitles.map(fetchWakeUpTime));
@@ -46,6 +46,8 @@ const main = async () => {
     const averageWakeUpTime = calculateAverageWakeUpTime(filteredWakeUpTimes);
     console.log("this week page title", thisWeeksPageTitles);
     console.log("Average wake-up time for the week:", averageWakeUpTime);
+
+    return averageWakeUpTime;
 };
 
 main().catch(console.error);
