@@ -5,7 +5,7 @@
   "devDependencies": {
     "dotenv": "^16.4.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.7.2"
   },
   "scripts": {
     "daily": "ts-node src/blog.ts daily",
@@ -15,6 +15,6 @@
   "dependencies": {
     "@katayama8000/cosense-client": "npm:@jsr/katayama8000__cosense-client",
     "dayjs": "^1.11.13",
-    "puppeteer": "23.5.3"
+    "puppeteer": "23.9.0"
   }
 }
