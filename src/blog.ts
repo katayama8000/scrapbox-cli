@@ -36,20 +36,23 @@ const templateBuilder = (items: TextItem[]): string => {
 
 const TEMPLATES = {
     daily: {
-        text: templateBuilder([
-            { content: "ルーティン", format: "strong" },
-            { content: "水を飲む", format: "plain" },
-            { content: "外に出る", format: "plain" },
-            { content: "9:00までに始動", format: "plain" },
-            { content: "起床時間", format: "strong" },
-            { content: "感想", format: "strong" },
-            { content: "明日すること", format: "strong" },
-            { content: "daily", format: "link" },
-        ]),
+        getTemplateTextFn: (connectText: string) => {
+            return templateBuilder([
+                { content: "ルーティン", format: "strong" },
+                { content: "水を飲む", format: "plain" },
+                { content: "外に出る", format: "plain" },
+                { content: "9:00までに始動", format: "plain" },
+                { content: "起床時間", format: "strong" },
+                { content: "感想", format: "strong" },
+                { content: "明日すること", format: "strong" },
+                { content: "daily", format: "link" },
+                { content: connectText, format: "link" },
+            ]);
+        },
         getTitleFn: (date: Dayjs) => formatDate(date, "yyyy/M/d (ddd)")
     },
     weekly: {
-        text: async () => {
+        getTemplateTextFn: async (connectText: string) => {
             const wakeUpTime = await calculateAverageWakeUpTime();
             return templateBuilder([
                 { content: "先週の平均起床時間", format: "strong" },
@@ -60,6 +63,7 @@ const TEMPLATES = {
                 { content: "感想", format: "strong" },
                 { content: "日記", format: "strong" },
                 { content: "weekly", format: "link" },
+                { content: connectText, format: "link" },
             ]);
         },
         getTitleFn: (date: Dayjs) => {
@@ -123,8 +127,12 @@ const main = async () => {
     }
 
     const template = TEMPLATES[templateType];
-    const today = dayjs();
+    const today = dayjs().add(1, "day");
     const title = template.getTitleFn(today);
+
+    const text = getConnectPageText(today);
+    const templateText = await template.getTemplateTextFn(text);
+
 
     const sid = process.env.SCRAPBOX_SID;
     if (!sid) {
@@ -135,10 +143,18 @@ const main = async () => {
     console.log(`Writing to Scrapbox: ${title}...`);
 
     try {
-        await writeToScrapbox(sid, "katayama8000", title, template.text);
+        await writeToScrapbox(sid, "katayama8000", title, templateText);
     } catch (error) {
         console.error("Failed to write to Scrapbox:", error);
     }
+};
+
+const getConnectPageText = (date: Dayjs): string => {
+    const currentDayOfWeek = date.day();
+    const daysToNextSunday = (7 - currentDayOfWeek) % 7;
+    const startOfWeek = date.add(daysToNextSunday + 1, "day");
+    const endOfWeek = startOfWeek.add(6 + 1, "day");
+    return `${formatDate(startOfWeek, "yyyy/M/d")}~${formatDate(endOfWeek, "yyyy/M/d")}`;
 };
 
 main().catch(console.error);
