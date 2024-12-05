@@ -130,7 +130,7 @@ const main = async () => {
     const today = dayjs().add(1, "day");
     const title = template.getTitleFn(today);
 
-    const text = getConnectPageText(today);
+    const text = getConnectPageText(today, templateType);
     const templateText = await template.getTemplateTextFn(text);
 
 
@@ -149,11 +149,16 @@ const main = async () => {
     }
 };
 
-const getConnectPageText = (date: Dayjs): string => {
-    const currentDayOfWeek = date.day();
-    const daysToNextSunday = (7 - currentDayOfWeek) % 7;
-    const startOfWeek = date.add(daysToNextSunday + 1, "day");
-    const endOfWeek = startOfWeek.add(6 + 1, "day");
+const getConnectPageText = (date: Dayjs, type: "weekly" | "daily"): string => {
+    let startOfWeek: Dayjs;
+    let endOfWeek: Dayjs;
+    if (type === "weekly") {
+        startOfWeek = date.day() === 0 ? date.add(1, "day") : date.add(8 - date.day(), "day");
+        endOfWeek = startOfWeek.add(6, "day");
+    } else {
+        startOfWeek = date.day() === 0 ? date.subtract(6, "day") : date.subtract(date.day() - 1, "day");
+        endOfWeek = startOfWeek.add(6, "day");
+    }
     return `${formatDate(startOfWeek, "yyyy/M/d")}~${formatDate(endOfWeek, "yyyy/M/d")}`;
 };
 
