@@ -2,9 +2,8 @@ import { dayjs } from "./libs/dayJs";
 import { formatDate } from "./libs/formatDate";
 
 const fetchWakeUpTime = async (pageDate: string): Promise<string> => {
-    const client = (await import("@katayama8000/cosense-client")).CosenseClient("katayama8000");
-
     try {
+        const client = (await import("@katayama8000/cosense-client")).CosenseClient("katayama8000");
         const data = await client.getPage(pageDate);
         const index = data.lines.findIndex(line => line.text.includes("起床時間"));
         if (index === -1 || !data.lines[index + 1]) {
@@ -18,9 +17,9 @@ const fetchWakeUpTime = async (pageDate: string): Promise<string> => {
 };
 
 const buildThisWeeksPageTitle = (): string[] => {
-    const today = dayjs()
-    const day = today.day()
-    const startOfWeek = today.subtract(day - 1, "day")
+    const today = dayjs();
+    const day = today.day();
+    const startOfWeek = day === 0 ? today.subtract(6, "day") : today.subtract(day - 1, "day");
     return Array.from({ length: 7 }, (_, i) => {
         const currentDate = startOfWeek.add(i, "day");
         return formatDate(currentDate, "yyyy/M/d (ddd)");
@@ -42,6 +41,8 @@ export const main = async () => {
 
     const wakeUpTimes = await Promise.all(thisWeeksPageTitles.map(fetchWakeUpTime));
     const filteredWakeUpTimes = wakeUpTimes.filter(time => !time.includes("Error"));
+
+    console.log("wake up times", wakeUpTimes);
 
     const averageWakeUpTime = calculateAverageWakeUpTime(filteredWakeUpTimes);
     console.log("this week page title", thisWeeksPageTitles);
