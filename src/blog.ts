@@ -61,7 +61,6 @@ const TEMPLATES = {
                 { content: "新しいこと", format: "strong" },
                 { content: "振り返り", format: "strong" },
                 { content: "感想", format: "strong" },
-                { content: "日記", format: "strong" },
                 { content: "weekly", format: "link" },
                 { content: connectLink, format: "link" },
             ]);
