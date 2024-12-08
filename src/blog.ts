@@ -143,7 +143,7 @@ const main = async () => {
     }
 
     const template = TEMPLATES[templateType];
-    const today = dayjs().add(1, "day");
+    const today = dayjs();
     const title = template.generateTitle(today);
 
     const connectLinkText = getConnectLinkText(today, templateType);
@@ -154,9 +154,7 @@ const main = async () => {
         console.error("Please set the SCRAPBOX_SID environment variable.");
         process.exit(1);
     }
-
     console.log(`Writing to Scrapbox: ${title}...`);
-
     try {
         await postToScrapbox(sessionId, "katayama8000", title, templateContent);
     } catch (error) {
