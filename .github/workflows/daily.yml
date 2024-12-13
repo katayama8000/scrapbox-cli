@@ -24,3 +24,16 @@ jobs:
       env:
         SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
       run: yarn daily
+
+    - name: notify to discord
+      uses: sarisia/actions-status-discord@v1
+      if: always()
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        status: ${{ job.status }}
+        content: "Hey <@316911818725392384>"
+        title: "Daily CLI"
+        description: "Daily CLI has been executed."
+        color: 0x0000ff
+        url: "https://github.com/katayama8000/scrapbox-cli"
+        username: Scrapbox
