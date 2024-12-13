@@ -31,7 +31,6 @@ jobs:
       with:
         webhook: ${{ secrets.DISCORD_WEBHOOK }}
         status: ${{ job.status }}
-        content: "Hey <@316911818725392384>"
         title: "Daily CLI"
         description: "Daily CLI has been executed."
         color: 0x0000ff
