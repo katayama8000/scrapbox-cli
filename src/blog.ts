@@ -45,8 +45,8 @@ const TEMPLATES = {
                 { content: "外に出る", format: "plain" },
                 { content: "9:00までに始動", format: "plain" },
                 { content: "感想", format: "strong" },
-                { content: "daily", format: "link" },
                 { content: connectLink, format: "link" },
+                { content: "daily", format: "link" },
             ]);
         },
         generateTitle: (date: Dayjs): string => formatDate(date, "yyyy/M/d (ddd)")
@@ -61,8 +61,8 @@ const TEMPLATES = {
                 { content: "新しいこと", format: "strong" },
                 { content: "振り返り", format: "strong" },
                 { content: "感想", format: "strong" },
-                { content: "weekly", format: "link" },
                 { content: connectLink, format: "link" },
+                { content: "weekly", format: "link" },
             ]);
         },
         generateTitle: (date: Dayjs): string => {
