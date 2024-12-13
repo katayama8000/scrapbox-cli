@@ -1,0 +1,66 @@
+name: CLI Runner
+
+on:
+  workflow_call:
+    inputs:
+      cli_type:
+        required: true
+        type: string
+        description: "Specify the CLI type to run (e.g., daily, weekly)"
+
+jobs:
+  run-cli:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name: Set current datetime as environment variable
+      env:
+        TZ: 'Asia/Tokyo'
+      run: echo "CURRENT_DATETIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+
+    - name: Run the CLI
+      id: cli-step
+      env:
+        SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
+      run: yarn ${{ inputs.cli_type }}
+
+    - name: Notify Discord on Success
+      uses: sarisia/actions-status-discord@v1
+      if: success()
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        status: success
+        content: |
+          ✅ Daily CLI executed successfully!
+          Date: ${{ env.CURRENT_DATETIME }}
+        title: "Daily CLI Success"
+        description: |
+          The CLI ran successfully without errors. 🎉
+        color: 0x00ff00
+        url: "https://github.com/katayama8000/scrapbox-cli"
+        username: "Scrapbox Bot"
+
+    - name: Notify Discord on Failure
+      uses: sarisia/actions-status-discord@v1
+      if: failure()
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        status: failure
+        content: |
+          ⚠️ Daily CLI failed to execute!
+          Date: ${{ env.CURRENT_DATETIME }}
+        title: "Daily CLI Failure"
+        description: |
+          The CLI encountered an error. Please check the logs for more details. 🛠️
+        color: 0xff0000
+        url: "https://github.com/katayama8000/scrapbox-cli/actions"
+        username: "Scrapbox Bot"
