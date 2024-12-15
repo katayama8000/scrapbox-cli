@@ -1,4 +1,4 @@
-name: CLI Workflow
+name: CLI Runner
 
 on:
   workflow_call:
@@ -12,11 +12,6 @@ on:
       color:
         required: true
         type: string
-    secrets:
-      SCRAPBOX_SID:
-        required: true
-      DISCORD_WEBHOOK:
-        required: true
 
 jobs:
   run-cli:
@@ -37,15 +32,14 @@ jobs:
         SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
       run: yarn ${{ inputs.cli_command }}
 
-    - name: Notify Discord
+    - name: Notify to Discord
       uses: sarisia/actions-status-discord@v1
       if: always()
       with:
         webhook: ${{ secrets.DISCORD_WEBHOOK }}
         status: ${{ job.status }}
         title: ${{ inputs.schedule_title }}
-        description: |
-          ${{ inputs.schedule_title }} has been executed.
+        description: "${{ inputs.schedule_title }} has been executed."
         color: ${{ inputs.color }}
         url: "https://github.com/katayama8000/scrapbox-cli"
-        username: "Scrapbox Bot"
+        username: Scrapbox
