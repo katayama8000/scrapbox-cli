@@ -31,23 +31,28 @@ const parseMinToNum = (time: string): number => {
     return hour + minute / 60;
 };
 
+/**
+ * Calculate the average wake-up time from the given times.
+ * @param times - The wake-up times to calculate the average from. times must be in the format "HH:mm".
+ * @returns The average wake-up time in hours.
+ */
 const calculateAverageWakeUpTime = (times: string[]): number => {
-    const totalMinutes = times.reduce((acc, time) => acc + parseMinToNum(time), 0);
-    return totalMinutes / times.length;
+    const trimmedTimes = times.map(time => time.trim());
+    if (!trimmedTimes.every(time => /^\d{1,2}:\d{2}$/.test(time))) {
+        throw new Error("Invalid time format. Please use the format 'HH:mm'.");
+    }
+    const totalMinutes = trimmedTimes.reduce((acc, time) => acc + parseMinToNum(time), 0);
+    return totalMinutes / trimmedTimes.length;
 };
 
 export const main = async () => {
     const thisWeeksPageTitles = buildThisWeeksPageTitle();
-
     const wakeUpTimes = await Promise.all(thisWeeksPageTitles.map(fetchWakeUpTime));
-    const filteredWakeUpTimes = wakeUpTimes.filter(time => !time.includes("Error"));
-
-    console.log("wake up times", wakeUpTimes);
-
+    const filteredWakeUpTimes = wakeUpTimes.filter(time => {
+        const trimmedTime = time.trim();
+        return /^[0-9]/.test(trimmedTime) && !trimmedTime.includes("Error");
+    });
     const averageWakeUpTime = calculateAverageWakeUpTime(filteredWakeUpTimes);
-    console.log("this week page title", thisWeeksPageTitles);
-    console.log("Average wake-up time for the week:", averageWakeUpTime);
-
     return averageWakeUpTime;
 };
 

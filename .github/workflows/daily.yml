@@ -2,37 +2,17 @@ name: Daily CLI
 
 on:
   schedule:
-    # Runs daily at 10:00 JST (01:00 UTC)
+    # every day at 10:00 JST (01:00 UTC)
     - cron: '0 1 * * *'
   workflow_dispatch:
 
 jobs:
-  run-daily-cli:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-
-    - name: Install dependencies
-      run: yarn install --frozen-lockfile
-
-    - name: Run the CLI
-      env:
-        SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
-      run: yarn daily
-
-    - name: notify to discord
-      uses: sarisia/actions-status-discord@v1
-      if: always()
-      with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        status: ${{ job.status }}
-        title: "Daily CLI"
-        description: "Daily CLI has been executed."
-        color: 0x0000ff
-        url: "https://github.com/katayama8000/scrapbox-cli"
-        username: Scrapbox
+  call-reusable:
+    uses: ./.github/workflows/cli_runner.yml
+    with:
+      cli_command: daily
+      schedule_title: "Daily CLI"
+      color: "0x00ff00"
+    secrets:
+      SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
