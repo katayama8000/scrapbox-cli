@@ -158,8 +158,13 @@ const main = async () => {
         await postToScrapbox(sessionId, "katayama8000", title, templateContent);
     } catch (error) {
         console.error("Failed to write to Scrapbox:", error);
-        throw error;
+        throw new Error("Failed to write to Scrapbox");
     }
 };
 
-main().catch(process.exit(1));
+main().catch(
+    (e) => {
+        console.error(e);
+        process.exit(1);
+    }
+);
