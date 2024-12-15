@@ -6,7 +6,7 @@ This CLI allows you to controle Scrapbox  directly from your terminal.
 
 1. **Clone the Repository**
     ```bash
-    git clone https://github.com/katayama8000/scrapbox-write-cli
+    git clone https://github.com/katayama8000/scrapbox-cli
     cd scrapbox-write-cli
     ```
 
