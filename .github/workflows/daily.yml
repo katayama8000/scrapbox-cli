@@ -2,14 +2,17 @@ name: Daily CLI
 
 on:
   schedule:
-    # Runs daily at 10:00 JST (01:00 UTC)
+    # 毎日午前10:00 JST (01:00 UTC)
     - cron: '0 1 * * *'
   workflow_dispatch:
 
 jobs:
   call-reusable:
-    uses: ./.github/workflows/cli_runner.yml
+    uses: ./.github/workflows/reusable-workflow.yml
     with:
       cli_command: daily
       schedule_title: "Daily CLI"
-      color: "0x00ff00"
+      color: "0x00ff00" # 緑
+    secrets:
+      SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}

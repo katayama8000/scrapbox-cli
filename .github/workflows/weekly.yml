@@ -2,14 +2,17 @@ name: Weekly CLI
 
 on:
   schedule:
-    # Runs every Sunday at 11:00 JST (02:00 UTC)
+    # 毎週日曜日午前11:00 JST (02:00 UTC)
     - cron: '0 2 * * 0'
   workflow_dispatch:
 
 jobs:
   call-reusable:
-    uses: ./.github/workflows/cli_runner.yml
+    uses: ./.github/workflows/reusable-workflow.yml
     with:
       cli_command: weekly
       schedule_title: "Weekly CLI"
-      color: "0x0000ff"
+      color: "0x0000ff" # 青
+    secrets:
+      SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
