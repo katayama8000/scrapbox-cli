@@ -32,7 +32,7 @@ jobs:
         SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
       run: yarn ${{ inputs.cli_command }}
 
-    - name: Notify to Discord
+    - name: Notify Discord
       uses: sarisia/actions-status-discord@v1
       if: always()
       with:
