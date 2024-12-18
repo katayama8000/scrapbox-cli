@@ -13,6 +13,4 @@ jobs:
       cli_command: daily
       schedule_title: "Daily CLI"
       color: "0x00ff00"
-    secrets:
-      SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
-      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+    secrets: inherit
