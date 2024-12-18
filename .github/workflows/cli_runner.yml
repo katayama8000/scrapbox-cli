@@ -42,4 +42,4 @@ jobs:
         description: "${{ inputs.schedule_title }} has been executed."
         color: ${{ inputs.color }}
         url: "https://github.com/katayama8000/scrapbox-cli"
-        username: Scrapbox
+        username: "Scrapbox Bot"
