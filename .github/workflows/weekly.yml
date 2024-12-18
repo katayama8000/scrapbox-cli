@@ -13,3 +13,4 @@ jobs:
       cli_command: weekly
       schedule_title: "Weekly CLI"
       color: "0x0000ff"
+    secrets: inherit

@@ -13,3 +13,4 @@ jobs:
       cli_command: daily
       schedule_title: "Daily CLI"
       color: "0x00ff00"
+    secrets: inherit
