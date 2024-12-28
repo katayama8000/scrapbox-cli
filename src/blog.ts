@@ -4,7 +4,7 @@ import { formatDate } from "./libs/formatDate";
 import { type Dayjs, dayjs } from "./libs/dayJs";
 import { main as calculateAverageWakeUpTime } from "./average_wake_up_time";
 
-type TextFormat = "link" | "strong" | "italic" | "strike" | "plain" | "checkbox";
+type TextFormat = "link" | "strong" | "italic" | "strike" | "plain" | "checkbox" | "nestedCheckbox";
 
 type TextItem = {
     content: string;
@@ -27,6 +27,8 @@ const formatTextItems = (items: TextItem[]): string => {
                     return content;
                 case "checkbox":
                     return ` ⬜ ${content}`;
+                case "nestedCheckbox":
+                    return `  ⬜ ${content}`;
                 default: {
                     const exhaustiveCheck: never = format;
                     throw new Error(`Unsupported format: ${exhaustiveCheck}`);
@@ -38,11 +40,19 @@ const formatTextItems = (items: TextItem[]): string => {
 
 const TEMPLATES = {
     daily: {
-        buildText: (connectLink: string): string => {
+        buildText: (connectLink: string, todos: string[]): string => {
+            const todoItems: TextItem[] = todos.map(todo => {
+                if (todo.includes("\t")) {
+                    return { content: todo.replace("\t", ""), format: "nestedCheckbox" };
+                }
+                return { content: todo, format: "checkbox" };
+            });
+
             return formatTextItems([
                 { content: "起床時間", format: "strong" },
                 { content: "明日すること", format: "strong" },
-                { content: "ルーティン", format: "strong" },
+                ...todoItems,
+                { content: "モーニングルーティン", format: "strong" },
                 { content: "水を飲む", format: "checkbox" },
                 { content: "外に出る", format: "checkbox" },
                 { content: "感想", format: "strong" },
@@ -57,7 +67,7 @@ const TEMPLATES = {
             const averageWakeUpTime = await calculateAverageWakeUpTime();
             return formatTextItems([
                 { content: "先週の平均起床時間", format: "strong" },
-                { content: ` ${averageWakeUpTime.toString()}h`, format: "plain" },
+                { content: `${averageWakeUpTime.toString()}h`, format: "plain" },
                 { content: "目標", format: "strong" },
                 { content: "新しいこと", format: "strong" },
                 { content: "振り返り", format: "strong" },
@@ -78,8 +88,8 @@ const checkPageExist = async (
     project: string,
     title: string,
 ): Promise<boolean> => {
-    const client = (await import("@katayama8000/cosense-client")).CosenseClient(project);
-    return await client.checkPageExist(title);
+    const { checkPageExist } = (await import("@katayama8000/cosense-client")).CosenseClient(project);
+    return await checkPageExist(title);
 };
 
 const createBrowserSession = async (
@@ -135,6 +145,30 @@ const getConnectLinkText = (date: Dayjs, type: "weekly" | "daily"): string => {
     return `${formatDate(startOfWeek, "yyyy/M/d")}~${formatDate(endOfWeek, "yyyy/M/d")}`;
 };
 
+const fetchTodaysTodos = async (project: string, pageTitle: string): Promise<string[]> => {
+    const { getPage } = (await import("@katayama8000/cosense-client")).CosenseClient(project);
+
+    try {
+        const data = await getPage(pageTitle);
+        const index = data.lines.findIndex(line => line.text.includes("明日すること"));
+        if (index === -1 || !data.lines[index + 1]) {
+            throw new Error("Failed to fetch today's todos");
+        }
+        const todos: string[] = [];
+        for (const line of data.lines.slice(index + 1)) {
+            if (line.text.startsWith("[* ")) {
+                break;
+            }
+            todos.push(line.text);
+        }
+        console.log("Fetched today's todos:", todos);
+        return todos;
+    } catch (error) {
+        console.error("Failed to fetch today's todos:", error);
+        throw new Error("Failed to fetch today's todos");
+    }
+};
+
 const main = async () => {
     const templateType = process.argv[2] as keyof typeof TEMPLATES;
     if (!templateType || !TEMPLATES[templateType]) {
@@ -143,17 +177,22 @@ const main = async () => {
     }
 
     const template = TEMPLATES[templateType];
-    const today = dayjs();
+    const today = dayjs().add(1, "day");
     const title = template.generateTitle(today);
 
     const connectLinkText = getConnectLinkText(today, templateType);
-    const templateContent = await template.buildText(connectLinkText);
+    const yesterdayPageTitle = formatDate(today.subtract(1, "day"), "yyyy/M/d (ddd)");
+    const todos = await fetchTodaysTodos("katayama8000", yesterdayPageTitle);
+    const templateContent = await template.buildText(connectLinkText, todos);
 
     const sessionId = process.env.SCRAPBOX_SID;
     if (!sessionId) {
         console.error("Please set the SCRAPBOX_SID environment variable.");
         process.exit(1);
     }
+
+
+
     console.log(`Writing to Scrapbox: ${title}...`);
     try {
         await postToScrapbox(sessionId, "katayama8000", title, templateContent);
