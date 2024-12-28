@@ -67,7 +67,7 @@ const TEMPLATES = {
             const averageWakeUpTime = await calculateAverageWakeUpTime();
             return formatTextItems([
                 { content: "先週の平均起床時間", format: "strong" },
-                { content: ` ${averageWakeUpTime.toString()}h`, format: "plain" },
+                { content: `${averageWakeUpTime.toString()}h`, format: "plain" },
                 { content: "目標", format: "strong" },
                 { content: "新しいこと", format: "strong" },
                 { content: "振り返り", format: "strong" },
