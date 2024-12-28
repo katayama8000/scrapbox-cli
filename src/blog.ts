@@ -88,8 +88,8 @@ const checkPageExist = async (
     project: string,
     title: string,
 ): Promise<boolean> => {
-    const client = (await import("@katayama8000/cosense-client")).CosenseClient(project);
-    return await client.checkPageExist(title);
+    const { checkPageExist } = (await import("@katayama8000/cosense-client")).CosenseClient(project);
+    return await checkPageExist(title);
 };
 
 const createBrowserSession = async (
@@ -146,11 +146,10 @@ const getConnectLinkText = (date: Dayjs, type: "weekly" | "daily"): string => {
 };
 
 const fetchTodaysTodos = async (project: string, pageTitle: string): Promise<string[]> => {
-    const { CosenseClient } = await import("@katayama8000/cosense-client");
-    const client = CosenseClient(project);
+    const { getPage } = (await import("@katayama8000/cosense-client")).CosenseClient(project);
 
     try {
-        const data = await client.getPage(pageTitle);
+        const data = await getPage(pageTitle);
         const index = data.lines.findIndex(line => line.text.includes("明日すること"));
         if (index === -1 || !data.lines[index + 1]) {
             throw new Error("Failed to fetch today's todos");
