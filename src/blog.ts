@@ -4,7 +4,7 @@ import { formatDate } from "./libs/formatDate";
 import { type Dayjs, dayjs } from "./libs/dayJs";
 import { main as calculateAverageWakeUpTime } from "./average_wake_up_time";
 
-type TextFormat = "link" | "strong" | "italic" | "strike" | "plain";
+type TextFormat = "link" | "strong" | "italic" | "strike" | "plain" | "checkbox";
 
 type TextItem = {
     content: string;
@@ -25,6 +25,8 @@ const formatTextItems = (items: TextItem[]): string => {
                     return `[  ${content}]`;
                 case "plain":
                     return content;
+                case "checkbox":
+                    return ` ⬜ ${content}`;
                 default: {
                     const exhaustiveCheck: never = format;
                     throw new Error(`Unsupported format: ${exhaustiveCheck}`);
@@ -41,9 +43,8 @@ const TEMPLATES = {
                 { content: "起床時間", format: "strong" },
                 { content: "明日すること", format: "strong" },
                 { content: "ルーティン", format: "strong" },
-                { content: "水を飲む", format: "plain" },
-                { content: "外に出る", format: "plain" },
-                { content: "9:00までに始動", format: "plain" },
+                { content: "水を飲む", format: "checkbox" },
+                { content: "外に出る", format: "checkbox" },
                 { content: "感想", format: "strong" },
                 { content: connectLink, format: "link" },
                 { content: "daily", format: "link" },
