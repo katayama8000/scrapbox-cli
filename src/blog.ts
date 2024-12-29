@@ -50,8 +50,9 @@ const TEMPLATES = {
 
             return formatTextItems([
                 { content: "起床時間", format: "strong" },
-                { content: "明日すること", format: "strong" },
+                { content: "今日すること", format: "strong" },
                 ...todoItems,
+                { content: "明日すること", format: "strong" },
                 { content: "モーニングルーティン", format: "strong" },
                 { content: "水を飲む", format: "checkbox" },
                 { content: "外に出る", format: "checkbox" },
