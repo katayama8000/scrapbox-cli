@@ -161,7 +161,6 @@ const fetchTodaysTodos = async (project: string, pageTitle: string): Promise<str
             }
             todos.push(line.text);
         }
-        console.log("Fetched today's todos:", todos);
         return todos;
     } catch (error) {
         console.error("Failed to fetch today's todos:", error);
@@ -177,7 +176,7 @@ const main = async () => {
     }
 
     const template = TEMPLATES[templateType];
-    const today = dayjs().add(1, "day");
+    const today = dayjs();
     const title = template.generateTitle(today);
 
     const connectLinkText = getConnectLinkText(today, templateType);
