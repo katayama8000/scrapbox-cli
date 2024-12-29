@@ -177,7 +177,7 @@ const main = async () => {
     }
 
     const template = TEMPLATES[templateType];
-    const today = dayjs().add(1, "day");
+    const today = dayjs();
     const title = template.generateTitle(today);
 
     const connectLinkText = getConnectLinkText(today, templateType);
