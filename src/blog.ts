@@ -26,9 +26,9 @@ const formatTextItems = (items: TextItem[]): string => {
                 case "plain":
                     return content;
                 case "checkbox":
-                    return ` ⬜ ${content}`;
+                    return ` ⬜${content}`;
                 case "nestedCheckbox":
-                    return `  ⬜ ${content}`;
+                    return `  ⬜${content}`;
                 default: {
                     const exhaustiveCheck: never = format;
                     throw new Error(`Unsupported format: ${exhaustiveCheck}`);
@@ -43,9 +43,9 @@ const TEMPLATES = {
         buildText: (connectLink: string, todos: string[]): string => {
             const todoItems: TextItem[] = todos.map(todo => {
                 if (todo.includes("\t")) {
-                    return { content: todo.replace("\t", ""), format: "nestedCheckbox" };
+                    return { content: todo.replace("\t", "").trim(), format: "nestedCheckbox" };
                 }
-                return { content: todo, format: "checkbox" };
+                return { content: todo.trim(), format: "checkbox" };
             });
 
             return formatTextItems([
