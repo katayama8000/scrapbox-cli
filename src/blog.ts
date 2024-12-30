@@ -26,9 +26,9 @@ const formatTextItems = (items: TextItem[]): string => {
                 case "plain":
                     return content;
                 case "checkbox":
-                    return ` ⬜ ${content}`;
+                    return ` ⬜${content}`;
                 case "nestedCheckbox":
-                    return `  ⬜ ${content}`;
+                    return `  ⬜${content}`;
                 default: {
                     const exhaustiveCheck: never = format;
                     throw new Error(`Unsupported format: ${exhaustiveCheck}`);
@@ -43,9 +43,9 @@ const TEMPLATES = {
         buildText: (connectLink: string, todos: string[]): string => {
             const todoItems: TextItem[] = todos.map(todo => {
                 if (todo.includes("\t")) {
-                    return { content: todo.replace("\t", ""), format: "nestedCheckbox" };
+                    return { content: todo.replace("\t", "").trim(), format: "nestedCheckbox" };
                 }
-                return { content: todo, format: "checkbox" };
+                return { content: todo.trim(), format: "checkbox" };
             });
 
             return formatTextItems([
@@ -86,10 +86,10 @@ const TEMPLATES = {
 };
 
 const checkPageExist = async (
-    project: string,
+    projectName: string,
     title: string,
 ): Promise<boolean> => {
-    const { checkPageExist } = (await import("@katayama8000/cosense-client")).CosenseClient(project);
+    const { checkPageExist } = (await import("@katayama8000/cosense-client")).CosenseClient(projectName);
     return await checkPageExist(title);
 };
 
@@ -110,17 +110,17 @@ const createBrowserSession = async (
 
 const postToScrapbox = async (
     sessionId: string,
-    project: string,
+    projectName: string,
     title: string,
     content: string | (() => Promise<string>)
 ): Promise<void> => {
     const body = typeof content === "function" ? await content() : content;
     const scrapboxUrl = new URL(
-        `https://scrapbox.io/${project}/${encodeURIComponent(title)}?body=${encodeURIComponent(body)}`,
+        `https://scrapbox.io/${projectName}/${encodeURIComponent(title)}?body=${encodeURIComponent(body)}`,
     );
     const { browser, page } = await createBrowserSession(sessionId);
 
-    if (await checkPageExist(project, title)) {
+    if (await checkPageExist(projectName, title)) {
         console.error(`Page already exists: ${title}`);
         throw new Error("Page already exists");
     }
@@ -146,8 +146,8 @@ const getConnectLinkText = (date: Dayjs, type: "weekly" | "daily"): string => {
     return `${formatDate(startOfWeek, "yyyy/M/d")}~${formatDate(endOfWeek, "yyyy/M/d")}`;
 };
 
-const fetchTodaysTodos = async (project: string, pageTitle: string): Promise<string[]> => {
-    const { getPage } = (await import("@katayama8000/cosense-client")).CosenseClient(project);
+const fetchTodaysTodos = async (projectName: string, pageTitle: string): Promise<string[]> => {
+    const { getPage } = (await import("@katayama8000/cosense-client")).CosenseClient(projectName);
 
     try {
         const data = await getPage(pageTitle);
@@ -176,13 +176,14 @@ const main = async () => {
         process.exit(1);
     }
 
+    const projectName = "katayama8000";
     const template = TEMPLATES[templateType];
     const today = dayjs();
     const title = template.generateTitle(today);
 
     const connectLinkText = getConnectLinkText(today, templateType);
     const yesterdayPageTitle = formatDate(today.subtract(1, "day"), "yyyy/M/d (ddd)");
-    const todos = await fetchTodaysTodos("katayama8000", yesterdayPageTitle);
+    const todos = await fetchTodaysTodos(projectName, yesterdayPageTitle);
     const templateContent = await template.buildText(connectLinkText, todos);
 
     const sessionId = process.env.SCRAPBOX_SID;
@@ -195,7 +196,7 @@ const main = async () => {
 
     console.log(`Writing to Scrapbox: ${title}...`);
     try {
-        await postToScrapbox(sessionId, "katayama8000", title, templateContent);
+        await postToScrapbox(sessionId, projectName, title, templateContent);
     } catch (error) {
         console.error("Failed to write to Scrapbox:", error);
         throw new Error("Failed to write to Scrapbox");
