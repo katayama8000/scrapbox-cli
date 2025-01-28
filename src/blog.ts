@@ -172,7 +172,7 @@ const fetchTodaysTodos = async (projectName: string, pageTitle: string): Promise
 const main = async () => {
     const templateType = process.argv[2] as keyof typeof TEMPLATES;
     if (!templateType || !TEMPLATES[templateType]) {
-        console.error("Usage: yarn <daily|weekly>");
+        console.error("Usage: pnpm <daily|weekly>");
         process.exit(1);
     }
 
