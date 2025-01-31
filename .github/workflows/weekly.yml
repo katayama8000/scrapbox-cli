@@ -11,6 +11,6 @@ jobs:
     uses: ./.github/workflows/cli_runner.yml
     with:
       cli_command: weekly
-      schedule_title: "Weekly CLI"
-      color: "0x0000ff"
+      schedule_title: 'Weekly CLI'
+      color: '#FF0000'
     secrets: inherit
