@@ -39,12 +39,12 @@ jobs:
 
       - name: Notify Discord
         uses: sarisia/actions-status-discord@v1
-        if: always()
+        if: failure()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           title: ${{ inputs.schedule_title }}
           description: '${{ inputs.schedule_title }} has been executed.'
           color: ${{ inputs.color }}
-          url: 'https://github.com/katayama8000/scrapbox-cli'
+          url: 'https://scrapbox.io/katayama8000/'
           username: 'Scrapbox Bot'
