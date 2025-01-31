@@ -165,7 +165,8 @@ const fetchTodaysTodos = async (projectName: string, pageTitle: string): Promise
         return todos;
     } catch (error) {
         console.error("Failed to fetch today's todos:", error);
-        throw new Error("Failed to fetch today's todos");
+        // ignore when error occurs
+        return [];
     }
 };
 
