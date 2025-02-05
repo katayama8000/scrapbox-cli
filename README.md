@@ -14,7 +14,7 @@ This CLI allows you to controle Scrapbox directly from your terminal.
 2. **Install Dependencies**
 
    ```bash
-   pnpm install
+   npm i
    ```
 
 3. **Configure Environment**
@@ -27,11 +27,11 @@ This CLI allows you to controle Scrapbox directly from your terminal.
 4. **Run Commands**
    - For daily updates:
      ```bash
-     pnpm daily
+     npm run daily
      ```
    - For weekly updates:
      ```bash
-     pnpm weekly
+     npm run weekly
      ```
 
 > **Tip**: To automate, set up these commands to run on GitHub Actions.
