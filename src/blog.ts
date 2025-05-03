@@ -3,40 +3,10 @@ import { launch, type Page, type Browser } from "puppeteer";
 import { formatDate } from "./libs/formatDate";
 import { type Dayjs, dayjs } from "./libs/dayJs";
 import { main as calculateAverageWakeUpTime } from "./average_wake_up_time";
+import { formatTextItems, TextItem } from "./libs/formatTextItems";
+import { checkPageExist } from "./libs/const checkPageExist";
+import { createBrowserSession } from "./libs/createBrowserSession";
 
-type TextFormat = "link" | "strong" | "italic" | "strike" | "plain" | "checkbox" | "nestedCheckbox";
-
-type TextItem = {
-    content: string;
-    format: TextFormat;
-};
-
-const formatTextItems = (items: TextItem[]): string => {
-    return items
-        .map(({ content, format }) => {
-            switch (format) {
-                case "link":
-                    return `#${content}`;
-                case "strong":
-                    return `[* ${content}]`;
-                case "italic":
-                    return `[/ ${content}]`;
-                case "strike":
-                    return `[  ${content}]`;
-                case "plain":
-                    return content;
-                case "checkbox":
-                    return ` ⬜${content}`;
-                case "nestedCheckbox":
-                    return `  ⬜${content}`;
-                default: {
-                    const exhaustiveCheck: never = format;
-                    throw new Error(`Unsupported format: ${exhaustiveCheck}`);
-                }
-            }
-        })
-        .join("\n");
-};
 
 const TEMPLATES = {
     daily: {
@@ -86,28 +56,6 @@ const TEMPLATES = {
     },
 };
 
-const checkPageExist = async (
-    projectName: string,
-    title: string,
-): Promise<boolean> => {
-    const { checkPageExist } = (await import("@katayama8000/cosense-client")).CosenseClient(projectName);
-    return await checkPageExist(title);
-};
-
-const createBrowserSession = async (
-    sessionId: string,
-): Promise<{ browser: Browser; page: Page }> => {
-    const browser = await launch({
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
-    const page = await browser.newPage();
-    await page.setCookie({
-        name: "connect.sid",
-        value: sessionId,
-        domain: "scrapbox.io",
-    });
-    return { browser, page };
-};
 
 const postToScrapbox = async (
     sessionId: string,
