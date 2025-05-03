@@ -47,18 +47,12 @@ const postToScrapbox = async (
 };
 
 const main = async () => {
-    const templateType = process.argv[2] as keyof typeof TEMPLATES;
-    if (!templateType || !TEMPLATES[templateType]) {
-        console.error("Usage: npm <daily|weekly|sleepLog>");
-        process.exit(1);
-    }
-
     const projectName = "katayama8000";
-    const template = TEMPLATES[templateType];
+    const template = TEMPLATES["sleepLog"];
     const today = dayjs();
     const title = template.generateTitle(today);
 
-    const templateContent = await template.buildText();
+    const templateContent = template.buildText();
 
     const sessionId = process.env.SCRAPBOX_SID;
     if (!sessionId) {

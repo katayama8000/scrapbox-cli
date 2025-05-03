@@ -1,0 +1,16 @@
+name: Sleep Log CLI
+
+on:
+  schedule:
+    # every day at 10:00 JST (01:00 UTC)
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+jobs:
+  call-reusable:
+    uses: ./.github/workflows/cli_runner.yml
+    with:
+      cli_command: sleepLog
+      schedule_title: 'Sleep Log'
+      color: '#FF0000'
+    secrets: inherit

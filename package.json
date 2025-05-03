@@ -10,6 +10,7 @@
   "scripts": {
     "daily": "ts-node src/blog.ts daily",
     "weekly": "ts-node src/blog.ts weekly",
+    "sleepLog": "ts-node src/sleepLog.ts",
     "wake": "ts-node src/average_wake_up_time.ts"
   },
   "dependencies": {
