@@ -4,7 +4,7 @@ import { formatDate } from "./libs/formatDate";
 import { type Dayjs, dayjs } from "./libs/dayJs";
 import { main as calculateAverageWakeUpTime } from "./average_wake_up_time";
 import { formatTextItems, TextItem } from "./libs/formatTextItems";
-import { checkPageExist } from "./libs/const checkPageExist";
+import { checkPageExist } from "./libs/checkPageExist";
 import { createBrowserSession } from "./libs/createBrowserSession";
 
 

@@ -3,7 +3,7 @@ import { launch, type Page, type Browser } from "puppeteer";
 import { formatDate } from "./libs/formatDate";
 import { type Dayjs, dayjs } from "./libs/dayJs";
 import { formatTextItems } from "./libs/formatTextItems";
-import { checkPageExist } from "./libs/const checkPageExist";
+import { checkPageExist } from "./libs/checkPageExist";
 import { createBrowserSession } from "./libs/createBrowserSession";
 
 
