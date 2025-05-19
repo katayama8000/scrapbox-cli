@@ -102,7 +102,8 @@ const fetchTodaysTodos = async (projectName: string, pageTitle: string): Promise
         const data = await getPage(pageTitle);
         const index = data.lines.findIndex(line => line.text.includes("明日すること"));
         if (index === -1 || !data.lines[index + 1]) {
-            throw new Error("Failed to fetch today's todos");
+            console.error("No '明日すること' section found in the page.");
+            return [];
         }
         const todos: string[] = [];
         for (const line of data.lines.slice(index + 1)) {
