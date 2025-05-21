@@ -19,15 +19,15 @@ const TEMPLATES = {
             });
 
             return formatTextItems([
-                { content: "起床時間", format: "strong" },
-                { content: "今日すること", format: "strong" },
+                { content: "起床時間", format: "paragraph1" },
+                { content: "今日すること", format: "paragraph1" },
                 ...todoItems,
-                { content: "明日すること", format: "strong" },
-                { content: "ルーティン", format: "strong" },
-                { content: "水を飲む", format: "checkbox" },
-                { content: "外に出る", format: "checkbox" },
-                { content: "携帯を机に置く", format: "checkbox" },
-                { content: "感想", format: "strong" },
+                { content: "明日すること", format: "paragraph1" },
+                { content: "ルーティン", format: "paragraph1" },
+                { content: "水を飲む", format: "nestedCheckbox" },
+                { content: "外に出る", format: "nestedCheckbox" },
+                { content: "携帯を机に置く", format: "nestedCheckbox" },
+                { content: "感想", format: "paragraph1" },
                 { content: connectLink, format: "link" },
                 { content: "daily", format: "link" },
             ]);
