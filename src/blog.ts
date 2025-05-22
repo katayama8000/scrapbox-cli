@@ -11,18 +11,18 @@ import { createBrowserSession } from "./libs/createBrowserSession";
 const TEMPLATES = {
     daily: {
         buildText: (connectLink: string, todos: string[]): string => {
-            const todoItems: TextItem[] = todos.map(todo => {
-                if (todo.includes("\t")) {
-                    return { content: todo.replace("\t", "").trim(), format: "nestedCheckbox" };
-                }
-                return { content: todo.trim(), format: "checkbox" };
-            });
+            // const todoItems: TextItem[] = todos.map(todo => {
+            //     if (todo.includes("\t")) {
+            //         return { content: todo.replace("\t", "").trim(), format: "nestedCheckbox" };
+            //     }
+            //     return { content: todo.trim(), format: "checkbox" };
+            // });
 
             return formatTextItems([
                 { content: "起床時間", format: "paragraph1" },
                 { content: "今日すること", format: "paragraph1" },
-                ...todoItems,
-                { content: "明日すること", format: "paragraph1" },
+                // ...todoItems,
+                // { content: "明日すること", format: "paragraph1" },
                 { content: "ルーティン", format: "paragraph1" },
                 { content: "水を飲む", format: "nestedCheckbox" },
                 { content: "外に出る", format: "nestedCheckbox" },
