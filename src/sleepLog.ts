@@ -1,5 +1,4 @@
 import "dotenv/config";
-import { launch, type Page, type Browser } from "puppeteer";
 import { formatDate } from "./libs/formatDate";
 import { type Dayjs, dayjs } from "./libs/dayJs";
 import { formatTextItems } from "./libs/formatTextItems";
