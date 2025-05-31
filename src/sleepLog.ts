@@ -11,13 +11,13 @@ const TEMPLATES = {
     sleepLog: {
         buildText: (): string => {
             return formatTextItems([
-                { content: "寝ようとした時間", format: "plain" },
-                { content: "寝た時間", format: "plain" },
-                { content: "起きた時間", format: "plain" },
-                { content: "寝る前にしていたこと", format: "plain" },
-                { content: "感想", format: "plain" },
-                { content: "今日寝る前にすること", format: "plain" },
-                { content: "睡眠改善", format: "link" },
+                { content: "Time I tried to sleep", format: "plain" },
+                { content: "Time I fell asleep", format: "plain" },
+                { content: "Time I woke up", format: "plain" },
+                { content: "What I was doing before sleep", format: "plain" },
+                { content: "Thoughts", format: "plain" },
+                { content: "What to do before sleep tonight", format: "plain" },
+                { content: "Sleep improvement", format: "link" },
             ]);
         },
         generateTitle: (date: Dayjs): string => formatDate(date, "yyyy/M/d (ddd)")
