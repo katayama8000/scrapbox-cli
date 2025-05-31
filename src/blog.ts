@@ -1,9 +1,8 @@
 import "dotenv/config";
-import { launch, type Page, type Browser } from "puppeteer";
 import { formatDate } from "./libs/formatDate";
 import { type Dayjs, dayjs } from "./libs/dayJs";
 import { main as calculateAverageWakeUpTime } from "./average_wake_up_time";
-import { formatTextItems, TextItem } from "./libs/formatTextItems";
+import { formatTextItems } from "./libs/formatTextItems";
 import { checkPageExist } from "./libs/checkPageExist";
 import { createBrowserSession } from "./libs/createBrowserSession";
 
@@ -19,15 +18,15 @@ const TEMPLATES = {
             // });
 
             return formatTextItems([
-                { content: "起床時間", format: "paragraph1" },
-                { content: "今日すること", format: "paragraph1" },
+                { content: "Wake-up Time", format: "paragraph1" },
+                { content: "Today's Tasks", format: "paragraph1" },
                 // ...todoItems,
-                // { content: "明日すること", format: "paragraph1" },
-                { content: "ルーティン", format: "paragraph1" },
-                { content: "水を飲む", format: "nestedCheckbox" },
-                { content: "外に出る", format: "nestedCheckbox" },
-                { content: "携帯を机に置く", format: "nestedCheckbox" },
-                { content: "感想", format: "paragraph1" },
+                // { content: "Tomorrow's Tasks", format: "paragraph1" },
+                { content: "Routine", format: "paragraph1" },
+                { content: "Drink water", format: "nestedCheckbox" },
+                { content: "Go outside", format: "nestedCheckbox" },
+                { content: "Put phone on desk", format: "nestedCheckbox" },
+                { content: "Thoughts", format: "paragraph1" },
                 { content: connectLink, format: "link" },
                 { content: "daily", format: "link" },
             ]);
@@ -38,12 +37,12 @@ const TEMPLATES = {
         buildText: async (connectLink: string): Promise<string> => {
             const averageWakeUpTime = await calculateAverageWakeUpTime();
             return formatTextItems([
-                { content: "先週の平均起床時間", format: "strong" },
+                { content: "Last week's average wake-up time", format: "strong" },
                 { content: `${averageWakeUpTime.toString()}h`, format: "plain" },
-                { content: "目標", format: "strong" },
-                { content: "新しいこと", format: "strong" },
-                { content: "振り返り", format: "strong" },
-                { content: "感想", format: "strong" },
+                { content: "Goals", format: "strong" },
+                { content: "New things", format: "strong" },
+                { content: "Reflections", format: "strong" },
+                { content: "Thoughts", format: "strong" },
                 { content: connectLink, format: "link" },
                 { content: "weekly", format: "link" },
             ]);
