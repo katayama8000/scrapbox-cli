@@ -132,7 +132,7 @@ const main = async () => {
     const title = template.generateTitle(today);
 
     const connectLinkText = getConnectLinkText(today, templateType);
-    const yesterdayPageTitle = formatDate(today.subtract(1, "day"), "yyyy/M/d (ddd)");
+    const _yesterdayPageTitle = formatDate(today.subtract(1, "day"), "yyyy/M/d (ddd)");
     // const todos = await fetchTodaysTodos(projectName, yesterdayPageTitle);
     const todos: string[] = []; // Temporarily set to empty array, as fetching todos is not implemented
     const templateContent = await template.buildText(connectLinkText, todos);
