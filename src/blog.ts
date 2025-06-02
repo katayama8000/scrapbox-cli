@@ -9,7 +9,7 @@ import { createBrowserSession } from "./libs/createBrowserSession";
 
 const TEMPLATES = {
     daily: {
-        buildText: (connectLink: string, todos: string[]): string => {
+        buildText: (connectLink: string, _todos: string[]): string => {
             // const todoItems: TextItem[] = todos.map(todo => {
             //     if (todo.includes("\t")) {
             //         return { content: todo.replace("\t", "").trim(), format: "nestedCheckbox" };
@@ -94,30 +94,30 @@ const getConnectLinkText = (date: Dayjs, type: "weekly" | "daily"): string => {
     return `${formatDate(startOfWeek, "yyyy/M/d")}~${formatDate(endOfWeek, "yyyy/M/d")}`;
 };
 
-const fetchTodaysTodos = async (projectName: string, pageTitle: string): Promise<string[]> => {
-    const { getPage } = (await import("@katayama8000/cosense-client")).CosenseClient(projectName);
+// const fetchTodaysTodos = async (projectName: string, pageTitle: string): Promise<string[]> => {
+//     const { getPage } = (await import("@katayama8000/cosense-client")).CosenseClient(projectName);
 
-    try {
-        const data = await getPage(pageTitle);
-        const index = data.lines.findIndex(line => line.text.includes("明日すること"));
-        if (index === -1 || !data.lines[index + 1]) {
-            console.error("No '明日すること' section found in the page.");
-            return [];
-        }
-        const todos: string[] = [];
-        for (const line of data.lines.slice(index + 1)) {
-            if (line.text.startsWith("[* ")) {
-                break;
-            }
-            todos.push(line.text);
-        }
-        return todos;
-    } catch (error) {
-        console.error("Failed to fetch today's todos:", error);
-        // ignore when error occurs
-        return [];
-    }
-};
+//     try {
+//         const data = await getPage(pageTitle);
+//         const index = data.lines.findIndex(line => line.text.includes("明日すること"));
+//         if (index === -1 || !data.lines[index + 1]) {
+//             console.error("No '明日すること' section found in the page.");
+//             return [];
+//         }
+//         const todos: string[] = [];
+//         for (const line of data.lines.slice(index + 1)) {
+//             if (line.text.startsWith("[* ")) {
+//                 break;
+//             }
+//             todos.push(line.text);
+//         }
+//         return todos;
+//     } catch (error) {
+//         console.error("Failed to fetch today's todos:", error);
+//         // ignore when error occurs
+//         return [];
+//     }
+// };
 
 const main = async () => {
     const templateType = process.argv[2] as keyof typeof TEMPLATES;
@@ -133,7 +133,8 @@ const main = async () => {
 
     const connectLinkText = getConnectLinkText(today, templateType);
     const yesterdayPageTitle = formatDate(today.subtract(1, "day"), "yyyy/M/d (ddd)");
-    const todos = await fetchTodaysTodos(projectName, yesterdayPageTitle);
+    // const todos = await fetchTodaysTodos(projectName, yesterdayPageTitle);
+    const todos: string[] = []; // Temporarily set to empty array, as fetching todos is not implemented
     const templateContent = await template.buildText(connectLinkText, todos);
 
     const sessionId = process.env.SCRAPBOX_SID;
