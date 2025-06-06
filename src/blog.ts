@@ -128,13 +128,11 @@ const main = async () => {
 
     const projectName = "katayama8000";
     const template = TEMPLATES[templateType];
-    const today = dayjs();
-    const title = template.generateTitle(today);
 
-    const connectLinkText = getConnectLinkText(today, templateType);
-    const _yesterdayPageTitle = formatDate(today.subtract(1, "day"), "yyyy/M/d (ddd)");
-    // const todos = await fetchTodaysTodos(projectName, yesterdayPageTitle);
-    const todos: string[] = []; // Temporarily set to empty array, as fetching todos is not implemented
+    const targetDate = templateType === "daily" ? dayjs().add(1, "day") : dayjs();
+    const title = template.generateTitle(targetDate);
+    const connectLinkText = getConnectLinkText(targetDate, templateType);
+    const todos: string[] = [];
     const templateContent = await template.buildText(connectLinkText, todos);
 
     const sessionId = process.env.SCRAPBOX_SID;
