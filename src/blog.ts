@@ -9,19 +9,10 @@ import { createBrowserSession } from "./libs/createBrowserSession";
 
 const TEMPLATES = {
     daily: {
-        buildText: (connectLink: string, _todos: string[]): string => {
-            // const todoItems: TextItem[] = todos.map(todo => {
-            //     if (todo.includes("\t")) {
-            //         return { content: todo.replace("\t", "").trim(), format: "nestedCheckbox" };
-            //     }
-            //     return { content: todo.trim(), format: "checkbox" };
-            // });
-
+        buildText: (connectLink: string): string => {
             return formatTextItems([
                 { content: "Wake-up Time", format: "paragraph1" },
                 { content: "Today's Tasks", format: "paragraph1" },
-                // ...todoItems,
-                // { content: "Tomorrow's Tasks", format: "paragraph1" },
                 { content: "Routine", format: "paragraph1" },
                 { content: "Drink water", format: "nestedCheckbox" },
                 { content: "Go outside", format: "nestedCheckbox" },
@@ -94,30 +85,6 @@ const getConnectLinkText = (date: Dayjs, type: "weekly" | "daily"): string => {
     return `${formatDate(startOfWeek, "yyyy/M/d")}~${formatDate(endOfWeek, "yyyy/M/d")}`;
 };
 
-// const fetchTodaysTodos = async (projectName: string, pageTitle: string): Promise<string[]> => {
-//     const { getPage } = (await import("@katayama8000/cosense-client")).CosenseClient(projectName);
-
-//     try {
-//         const data = await getPage(pageTitle);
-//         const index = data.lines.findIndex(line => line.text.includes("明日すること"));
-//         if (index === -1 || !data.lines[index + 1]) {
-//             console.error("No '明日すること' section found in the page.");
-//             return [];
-//         }
-//         const todos: string[] = [];
-//         for (const line of data.lines.slice(index + 1)) {
-//             if (line.text.startsWith("[* ")) {
-//                 break;
-//             }
-//             todos.push(line.text);
-//         }
-//         return todos;
-//     } catch (error) {
-//         console.error("Failed to fetch today's todos:", error);
-//         // ignore when error occurs
-//         return [];
-//     }
-// };
 
 const main = async () => {
     const templateType = process.argv[2] as keyof typeof TEMPLATES;
@@ -132,8 +99,7 @@ const main = async () => {
     const targetDate = templateType === "daily" ? dayjs().add(1, "day") : dayjs();
     const title = template.generateTitle(targetDate);
     const connectLinkText = getConnectLinkText(targetDate, templateType);
-    const todos: string[] = [];
-    const templateContent = await template.buildText(connectLinkText, todos);
+    const templateContent = await template.buildText(connectLinkText);
 
     const sessionId = process.env.SCRAPBOX_SID;
     if (!sessionId) {
