@@ -47,7 +47,7 @@ const postToScrapbox = async (
 
 const main = async () => {
     const projectName = "katayama8000";
-    const template = TEMPLATES["sleepLog"];
+    const template = TEMPLATES.sleepLog;
     const today = dayjs();
     const title = template.generateTitle(today);
 

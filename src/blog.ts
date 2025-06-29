@@ -13,10 +13,7 @@ const TEMPLATES = {
             return formatTextItems([
                 { content: "Wake-up Time", format: "paragraph1" },
                 { content: "Today's Tasks", format: "paragraph1" },
-                { content: "Routine", format: "paragraph1" },
-                { content: "Drink water", format: "nestedCheckbox" },
-                { content: "Go outside", format: "nestedCheckbox" },
-                { content: "Put phone on desk", format: "nestedCheckbox" },
+                { content: "How you feel when you wake up", format: "paragraph1" },
                 { content: "Thoughts", format: "paragraph1" },
                 { content: connectLink, format: "link" },
                 { content: "daily", format: "link" },
@@ -106,9 +103,6 @@ const main = async () => {
         console.error("Please set the SCRAPBOX_SID environment variable.");
         process.exit(1);
     }
-
-
-
     console.log(`Writing to Scrapbox: ${title}...`);
     try {
         await postToScrapbox(sessionId, projectName, title, templateContent);
