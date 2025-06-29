@@ -2,11 +2,6 @@
   "name": "scrapbox-cli",
   "version": "1.0.0",
   "license": "MIT",
-  "devDependencies": {
-    "dotenv": "^16.4.5",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
-  },
   "scripts": {
     "daily": "ts-node src/blog.ts daily",
     "weekly": "ts-node src/blog.ts weekly",
@@ -16,6 +11,11 @@
   "dependencies": {
     "@katayama8000/cosense-client": "npm:@jsr/katayama8000__cosense-client",
     "dayjs": "^1.11.13",
-    "puppeteer": "23.9.0"
+    "puppeteer": "24.11.1"
+  },
+  "devDependencies": {
+    "dotenv": "^17.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
   }
 }
