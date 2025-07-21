@@ -1,4 +1,4 @@
-type TextFormat = "link" | "strong" | "italic" | "strike" | "plain" | "checkbox" | "nestedCheckbox" | "paragraph1";
+type TextFormat = "link" | "strong" | "italic" | "strike" | "plain" | "nestedPlain" | "checkbox" | "nestedCheckbox" | "paragraph1";
 
 export type TextItem = {
     content: string;
@@ -19,6 +19,8 @@ export const formatTextItems = (items: TextItem[]): string => {
                     return `[  ${content}]`;
                 case "plain":
                     return content;
+                case "nestedPlain":
+                    return `  ${content}`;
                 case "checkbox":
                     return ` ⬜${content}`;
                 case "nestedCheckbox":

@@ -13,6 +13,7 @@ const TEMPLATES = {
             return formatTextItems([
                 { content: "Wake-up Time", format: "paragraph1" },
                 { content: "Today's Tasks", format: "paragraph1" },
+                { content: "https://tatsufumi.backlog.com/board/FAMILY", format: "nestedPlain" },
                 { content: "How you feel when you wake up", format: "paragraph1" },
                 { content: "Thoughts", format: "paragraph1" },
                 { content: connectLink, format: "link" },
