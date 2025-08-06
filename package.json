@@ -11,11 +11,11 @@
   "dependencies": {
     "@katayama8000/cosense-client": "npm:@jsr/katayama8000__cosense-client",
     "dayjs": "^1.11.13",
-    "puppeteer": "24.11.1"
+    "puppeteer": "^24.16.0"
   },
   "devDependencies": {
     "dotenv": "^17.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.9.2"
   }
 }
