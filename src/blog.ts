@@ -15,7 +15,7 @@ const TEMPLATES = {
                 { content: "Today's Tasks", format: "paragraph1" },
                 { content: "https://tatsufumi.backlog.com/board/FAMILY", format: "nestedPlain" },
                 { content: "How you feel when you wake up", format: "paragraph1" },
-                { content: "Thoughts", format: "paragraph1" },
+                { content: "How was the day?", format: "paragraph1" },
                 { content: connectLink, format: "link" },
                 { content: "daily", format: "link" },
             ]);
