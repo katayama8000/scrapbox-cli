@@ -27,7 +27,7 @@ const TEMPLATES = {
             const averageWakeUpTime = await calculateAverageWakeUpTime();
             return formatTextItems([
                 { content: "Last week's average wake-up time", format: "strong" },
-                { content: `${averageWakeUpTime.toString()}h`, format: "plain" },
+                { content: ` ${averageWakeUpTime.toString()}h`, format: "plain" },
                 { content: "Goals", format: "strong" },
                 { content: "New things", format: "strong" },
                 { content: "Reflections", format: "strong" },
