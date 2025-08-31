@@ -87,7 +87,7 @@ const getConnectLinkText = (date: Dayjs, type: "weekly" | "daily"): string => {
 const main = async () => {
     const templateType = process.argv[2] as keyof typeof TEMPLATES;
     if (!templateType || !TEMPLATES[templateType]) {
-        console.error("Usage: pnpm <daily|weekly>");
+        console.error("Usage: yarn <daily|weekly>");
         process.exit(1);
     }
 
