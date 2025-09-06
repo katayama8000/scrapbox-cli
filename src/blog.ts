@@ -94,9 +94,8 @@ const main = async () => {
     const projectName = "katayama8000";
     const template = TEMPLATES[templateType];
 
-    const targetDate = templateType === "daily" ? dayjs().add(1, "day") : dayjs();
-    const title = template.generateTitle(targetDate);
-    const connectLinkText = getConnectLinkText(targetDate, templateType);
+    const title = template.generateTitle(dayjs());
+    const connectLinkText = getConnectLinkText(dayjs(), templateType);
     const templateContent = await template.buildText(connectLinkText);
 
     const sessionId = process.env.SCRAPBOX_SID;
