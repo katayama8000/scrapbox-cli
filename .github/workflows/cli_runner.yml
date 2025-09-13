@@ -46,3 +46,15 @@ jobs:
           color: ${{ inputs.color }}
           url: 'https://scrapbox.io/katayama8000/'
           username: 'Scrapbox Bot'
+
+
+      - name: Add Issue to Backlog
+        if: failure()
+        uses: katayama8000/backlog-github-actions@0.1.0
+        with:
+          backlog_domain: 'tatsufumi.backlog.com'
+          api_key: ${{ secrets.BACKLOG_API_KEY }}
+          project_id: '665456'
+          issue_type_id: '3529948'
+          summary: '${{ inputs.schedule_title }} has failed'
+          priority: 'Normal'

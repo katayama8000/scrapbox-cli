@@ -34,4 +34,10 @@ This CLI allows you to controle Scrapbox directly from your terminal.
      yarn weekly
      ```
 
-> **Tip**: To automate, set up these commands to run on GitHub Actions.
+5. **Run on GitHub Actions**
+   - set secrets in your repository settings:
+     - `SCRAPBOX_SID`
+     - `DISCORD_WEBHOOK`
+     - `BACKLOG_API_KEY`
+   - Enable GitHub Actions in your repository.
+
