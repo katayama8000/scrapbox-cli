@@ -50,7 +50,7 @@ jobs:
 
       - name: Add Issue to Backlog
         if: failure()
-        uses: katayama8000/backlog-github-actions@0.1.0
+        uses: katayama8000/backlog-issue-creator@0.2.0
         with:
           backlog_domain: 'tatsufumi.backlog.com'
           api_key: ${{ secrets.BACKLOG_API_KEY }}
