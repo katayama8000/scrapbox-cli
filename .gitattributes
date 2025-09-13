@@ -1,5 +1,5 @@
-*.md linguist-detectable=true
-*.md linguist-language=markdown
 *.yml linguist-detectable=true
 *.yml linguist-language=yaml
+*.md linguist-detectable=true
+*.md linguist-language=markdown
 
