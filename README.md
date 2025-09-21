@@ -34,14 +34,6 @@ This CLI allows you to control Scrapbox directly from your terminal.
      ```bash
      yarn weekly
      ```
-   - To post a sleep log:
-     ```bash
-     yarn sleepLog
-     ```
-   - To calculate the average wake-up time:
-     ```bash
-     yarn wake
-     ```
 
 5. **Run on GitHub Actions**
 
@@ -61,10 +53,3 @@ This project's design is a hybrid of **Clean Architecture** and **Hexagonal Arch
 The key principle is the **Dependency Rule**: dependencies only flow inwards, from `infrastructure` to `application` to `domain`. This makes the core business logic independent of external details, improving testability and maintainability.
 
 For a more detailed breakdown and diagrams, see [ARCHITECTURE.md](ARCHITECTURE.md).
-
-## Development
-
-This project uses `ts-node` to run TypeScript files directly without pre-compiling them. Path aliases from `tsconfig.json` are resolved at runtime using `tsconfig-paths`.
-
-All scripts are defined in `package.json` and can be run with `yarn <script_name>`.
-
