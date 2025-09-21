@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
     "lib": ["ESNext", "DOM"],
-    "module": "node16",
+    "module": "NodeNext",
     "outDir": "dist",
     "sourceMap": true,
     "strict": true,
     "target": "ES2024",
     "esModuleInterop": true,
-    "moduleResolution": "node16",
+    "moduleResolution": "nodenext",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
