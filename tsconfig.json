@@ -8,6 +8,10 @@
     "target": "ES2024",
     "esModuleInterop": true,
     "moduleResolution": "nodenext",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules"]
