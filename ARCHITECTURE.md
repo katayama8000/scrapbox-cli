@@ -15,18 +15,18 @@ graph TD
 
     subgraph Infrastructure
         direction LR
-        Adapters[Adapters (Scrapbox API, Date Provider)]
+        Adapters["Adapters (Scrapbox API, Date Provider)"]
     end
 
     subgraph Application
         direction LR
-        UseCases[Use Cases (PostBlog, etc.)]
-        Ports[Ports (Interfaces)]
+        UseCases["Use Cases (PostBlog, etc.)"]
+        Ports["Ports (Interfaces)"]
     end
 
     subgraph Domain
         direction LR
-        Models[Domain Models (ScrapboxPage)]
+        Models["Domain Models (ScrapboxPage)"]
     end
 
     CLI --> UseCases
