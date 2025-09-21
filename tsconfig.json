@@ -1,13 +1,17 @@
 {
   "compilerOptions": {
     "lib": ["ESNext", "DOM"],
-    "module": "NodeNext",
+    "module": "node16",
     "outDir": "dist",
     "sourceMap": true,
     "strict": true,
     "target": "ES2024",
     "esModuleInterop": true,
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node16",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules"]

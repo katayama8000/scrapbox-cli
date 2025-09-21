@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "daily": "ts-node src/blog.ts daily",
-    "weekly": "ts-node src/blog.ts weekly",
-    "sleepLog": "ts-node src/sleepLog.ts",
-    "wake": "ts-node src/average_wake_up_time.ts"
+    "daily": "ts-node -r dotenv/config -r tsconfig-paths/register src/infrastructure/cli/blog-cli.ts daily",
+    "weekly": "ts-node -r dotenv/config -r tsconfig-paths/register src/infrastructure/cli/blog-cli.ts weekly",
+    "sleepLog": "ts-node -r dotenv/config -r tsconfig-paths/register src/infrastructure/cli/sleepLog-cli.ts",
+    "wake": "ts-node -r dotenv/config -r tsconfig-paths/register src/infrastructure/cli/wake-cli.ts"
   },
   "dependencies": {
     "@katayama8000/cosense-client": "npm:@jsr/katayama8000__cosense-client",
@@ -16,6 +16,7 @@
   "devDependencies": {
     "dotenv": "^17.0.0",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.2"
   }
 }

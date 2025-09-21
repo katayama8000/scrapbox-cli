@@ -1,6 +1,6 @@
 # Scrapbox CLI
 
-This CLI allows you to controle Scrapbox directly from your terminal.
+This CLI allows you to control Scrapbox directly from your terminal.
 
 ## Setup and Usage
 
@@ -25,6 +25,7 @@ This CLI allows you to controle Scrapbox directly from your terminal.
      ```
 
 4. **Run Commands**
+
    - For daily updates:
      ```bash
      yarn daily
@@ -33,11 +34,30 @@ This CLI allows you to controle Scrapbox directly from your terminal.
      ```bash
      yarn weekly
      ```
+   - To post a sleep log:
+     ```bash
+     yarn sleepLog
+     ```
+   - To calculate the average wake-up time:
+     ```bash
+     yarn wake
+     ```
 
 5. **Run on GitHub Actions**
+
    - set secrets in your repository settings:
      - `SCRAPBOX_SID`
      - `DISCORD_WEBHOOK`
      - `BACKLOG_API_KEY`
    - Enable GitHub Actions in your repository.
+
+## Architecture
+
+This project follows a Clean Architecture pattern. For more details, see [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## Development
+
+This project uses `ts-node` to run TypeScript files directly without pre-compiling them. Path aliases from `tsconfig.json` are resolved at runtime using `tsconfig-paths`.
+
+All scripts are defined in `package.json` and can be run with `yarn <script_name>`.
 
