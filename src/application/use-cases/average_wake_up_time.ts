@@ -3,6 +3,7 @@ import { ScrapboxRepository } from "@/application/ports/scrapbox-repository";
 import { DateProvider } from "@/application/ports/date-provider";
 import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl";
 import { formatDate } from "@/infrastructure/adapters/formatters/formatDate";
+import { IScrapboxPageNotification } from "@/application/ports/scrapbox-page-notification";
 
 export class CalculateAverageWakeUpTimeUseCase {
   constructor(
@@ -30,14 +31,45 @@ export class CalculateAverageWakeUpTimeUseCase {
 
   private async fetchWakeUpTime(projectName: string, pageTitle: string): Promise<string | null> {
     const page = await this.scrapboxRepository.getPage(projectName, pageTitle);
-    if (!page || !page.lines) {
+    if (!page) {
       return null;
     }
-    const index = page.lines.findIndex((line) => line.includes("Wake-up Time"));
-    if (index === -1 || !page.lines[index + 1]) {
+
+    class LinesExtractor implements IScrapboxPageNotification {
+      private _lines: string[] = [];
+
+      get extractedLines(): string[] {
+        return this._lines;
+      }
+
+      projectName(projectName: string): this {
+        return this;
+      }
+      title(title: string): this {
+        return this;
+      }
+      content(content: string): this {
+        return this;
+      }
+      lines(lines: string[]): this {
+        this._lines = lines;
+        return this;
+      }
+    }
+
+    const extractor = new LinesExtractor();
+    page.notify(extractor);
+    const lines = extractor.extractedLines;
+
+    if (lines.length === 0) {
       return null;
     }
-    return page.lines[index + 1];
+
+    const index = lines.findIndex((line) => line.includes("Wake-up Time"));
+    if (index === -1 || !lines[index + 1]) {
+      return null;
+    }
+    return lines[index + 1];
   }
 
   private buildThisWeeksPageTitle(): string[] {

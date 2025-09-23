@@ -5,6 +5,7 @@ import { formatDate } from "@/infrastructure/adapters/formatters/formatDate";
 import { formatTextItems } from "@/infrastructure/adapters/formatters/formatTextItems";
 import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl";
 import { CalculateAverageWakeUpTimeUseCase } from "@/application/use-cases/average_wake_up_time";
+import { ScrapboxPayloadBuilder } from "@/infrastructure/adapters/scrapbox/scrapbox-payload-builder";
 
 // Daily Blog
 const dailyTemplate = {
@@ -26,7 +27,7 @@ export class PostDailyBlogUseCase {
   constructor(
     private readonly scrapboxRepository: ScrapboxRepository,
     private readonly dateProvider: DateProvider
-  ) { }
+  ) {}
 
   async execute(projectName: string): Promise<void> {
     const today = this.dateProvider.now();
@@ -36,8 +37,12 @@ export class PostDailyBlogUseCase {
 
     const page = ScrapboxPage.create({ projectName, title, content });
 
-    if (await this.scrapboxRepository.exists(page)) {
-      throw new Error(`Page already exists: ${title}`);
+    const builder = new ScrapboxPayloadBuilder();
+    page.notify(builder);
+    const { projectName: pageProjectName, title: pageTitle } = builder.build();
+
+    if (await this.scrapboxRepository.exists(pageProjectName, pageTitle)) {
+      throw new Error(`Page already exists: ${pageTitle}`);
     }
 
     await this.scrapboxRepository.post(page);
@@ -81,7 +86,7 @@ export class PostWeeklyBlogUseCase {
     private readonly scrapboxRepository: ScrapboxRepository,
     private readonly dateProvider: DateProvider,
     private readonly calculateAverageWakeUpTimeUseCase: CalculateAverageWakeUpTimeUseCase
-  ) { }
+  ) {}
 
   async execute(projectName: string): Promise<void> {
     const today = this.dateProvider.now();
@@ -92,8 +97,12 @@ export class PostWeeklyBlogUseCase {
 
     const page = ScrapboxPage.create({ projectName, title, content });
 
-    if (await this.scrapboxRepository.exists(page)) {
-      throw new Error(`Page already exists: ${title}`);
+    const builder = new ScrapboxPayloadBuilder();
+    page.notify(builder);
+    const { projectName: pageProjectName, title: pageTitle } = builder.build();
+
+    if (await this.scrapboxRepository.exists(pageProjectName, pageTitle)) {
+      throw new Error(`Page already exists: ${pageTitle}`);
     }
 
     await this.scrapboxRepository.post(page);

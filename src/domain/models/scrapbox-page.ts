@@ -1,9 +1,11 @@
+import { IScrapboxPageNotification } from '../../application/ports/scrapbox-page-notification';
+
 export class ScrapboxPage {
   private constructor(
-    public readonly projectName: string,
-    public readonly title: string,
-    public readonly content: string,
-    public readonly lines?: string[],
+    private readonly projectName: string,
+    private readonly title: string,
+    private readonly content: string,
+    private readonly lines?: string[],
   ) { }
 
   static create({
@@ -18,5 +20,12 @@ export class ScrapboxPage {
     lines?: string[];
   }): ScrapboxPage {
     return new ScrapboxPage(projectName, title, content, lines);
+  }
+
+  notify(notification: IScrapboxPageNotification): void {
+    notification.projectName(this.projectName).title(this.title).content(this.content);
+    if (this.lines) {
+      notification.lines(this.lines);
+    }
   }
 }
