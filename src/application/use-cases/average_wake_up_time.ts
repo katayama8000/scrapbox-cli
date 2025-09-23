@@ -3,7 +3,7 @@ import { ScrapboxRepository } from "@/application/ports/scrapbox-repository";
 import { DateProvider } from "@/application/ports/date-provider";
 import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl";
 import { formatDate } from "@/infrastructure/adapters/formatters/formatDate";
-import { IScrapboxPageNotification } from "@/application/ports/scrapbox-page-notification";
+import { ScrapboxPayloadBuilder } from "@/infrastructure/adapters/scrapbox/scrapbox-payload-builder";
 
 export class CalculateAverageWakeUpTimeUseCase {
   constructor(
@@ -35,33 +35,11 @@ export class CalculateAverageWakeUpTimeUseCase {
       return null;
     }
 
-    class LinesExtractor implements IScrapboxPageNotification {
-      private _lines: string[] = [];
+    const builder = new ScrapboxPayloadBuilder();
+    page.notify(builder);
+    const { lines } = builder.build();
 
-      get extractedLines(): string[] {
-        return this._lines;
-      }
-
-      projectName(projectName: string): this {
-        return this;
-      }
-      title(title: string): this {
-        return this;
-      }
-      content(content: string): this {
-        return this;
-      }
-      lines(lines: string[]): this {
-        this._lines = lines;
-        return this;
-      }
-    }
-
-    const extractor = new LinesExtractor();
-    page.notify(extractor);
-    const lines = extractor.extractedLines;
-
-    if (lines.length === 0) {
+    if (!lines || lines.length === 0) {
       return null;
     }
 
