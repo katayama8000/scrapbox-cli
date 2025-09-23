@@ -26,7 +26,7 @@ export class PostDailyBlogUseCase {
   constructor(
     private readonly scrapboxRepository: ScrapboxRepository,
     private readonly dateProvider: DateProvider
-  ) {}
+  ) { }
 
   async execute(projectName: string): Promise<void> {
     const today = this.dateProvider.now();
@@ -34,7 +34,7 @@ export class PostDailyBlogUseCase {
     const connectLinkText = this.getConnectLinkText(today);
     const content = dailyTemplate.buildText(connectLinkText);
 
-    const page: ScrapboxPage = { projectName, title, content };
+    const page = ScrapboxPage.create({ projectName, title, content });
 
     if (await this.scrapboxRepository.exists(page)) {
       throw new Error(`Page already exists: ${title}`);
@@ -81,7 +81,7 @@ export class PostWeeklyBlogUseCase {
     private readonly scrapboxRepository: ScrapboxRepository,
     private readonly dateProvider: DateProvider,
     private readonly calculateAverageWakeUpTimeUseCase: CalculateAverageWakeUpTimeUseCase
-  ) {}
+  ) { }
 
   async execute(projectName: string): Promise<void> {
     const today = this.dateProvider.now();
@@ -90,7 +90,7 @@ export class PostWeeklyBlogUseCase {
     const avgWakeUpTime = await this.calculateAverageWakeUpTimeUseCase.execute(projectName);
     const content = await weeklyTemplate.buildText(connectLinkText, avgWakeUpTime);
 
-    const page: ScrapboxPage = { projectName, title, content };
+    const page = ScrapboxPage.create({ projectName, title, content });
 
     if (await this.scrapboxRepository.exists(page)) {
       throw new Error(`Page already exists: ${title}`);

@@ -27,7 +27,7 @@ export class PostSleepLogUseCase {
   constructor(
     private readonly scrapboxRepository: ScrapboxRepository,
     private readonly dateProvider: DateProvider
-  ) {}
+  ) { }
 
   async execute(projectName: string): Promise<void> {
     const template = TEMPLATES.sleepLog;
@@ -35,11 +35,11 @@ export class PostSleepLogUseCase {
     const title = template.generateTitle(today);
     const content = template.buildText();
 
-    const page: ScrapboxPage = {
+    const page = ScrapboxPage.create({
       projectName,
       title: title + " 睡眠ログ",
       content,
-    };
+    });
 
     const pageExists = await this.scrapboxRepository.exists(page);
     if (pageExists) {

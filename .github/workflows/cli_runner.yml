@@ -50,11 +50,12 @@ jobs:
 
       - name: Add Issue to Backlog
         if: failure()
-        uses: katayama8000/backlog-issue-creator@0.2.0
+        uses: katayama8000/backlog-issue-creator@0.3.2
         with:
           backlog_domain: 'tatsufumi.backlog.com'
           api_key: ${{ secrets.BACKLOG_API_KEY }}
           project_id: '665456'
           issue_type_id: '3529948'
           summary: '${{ inputs.schedule_title }} has failed'
-          priority: 'Normal'
+          description: '${{ inputs.schedule_title }} has been executed and failed. Please check the Scrapbox page for details: https://scrapbox.io/katayama8000/'
+          priority_id: '3'
