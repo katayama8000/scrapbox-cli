@@ -13,20 +13,24 @@ const dailyTemplate = {
     return formatTextItems([
       { content: "Wake-up Time", format: "paragraph1" },
       { content: "Today's Tasks", format: "paragraph1" },
-      { content: "https://tatsufumi.backlog.com/board/FAMILY", format: "nestedPlain" },
+      {
+        content: "https://tatsufumi.backlog.com/board/FAMILY",
+        format: "nestedPlain",
+      },
       { content: "How you feel when you wake up", format: "paragraph1" },
       { content: "How was the day?", format: "paragraph1" },
       { content: connectLink, format: "link" },
       { content: "daily", format: "link" },
     ]);
   },
-  generateTitle: (date: Date): string => formatDate(DateProviderImpl.getDayjs()(date), "yyyy/M/d (ddd)"),
+  generateTitle: (date: Date): string =>
+    formatDate(DateProviderImpl.getDayjs()(date), "yyyy/M/d (ddd)"),
 };
 
 export class PostDailyBlogUseCase {
   constructor(
     private readonly scrapboxRepository: ScrapboxRepository,
-    private readonly dateProvider: DateProvider
+    private readonly dateProvider: DateProvider,
   ) {}
 
   async execute(projectName: string): Promise<void> {
@@ -52,7 +56,9 @@ export class PostDailyBlogUseCase {
     const dayjs = DateProviderImpl.getDayjs();
     const d = dayjs(date);
     const isSunday = d.day() === 0;
-    const startOfWeek = isSunday ? d.subtract(6, "day") : d.subtract(d.day() - 1, "day");
+    const startOfWeek = isSunday
+      ? d.subtract(6, "day")
+      : d.subtract(d.day() - 1, "day");
     const endOfWeek = startOfWeek.add(6, "day");
     return `${formatDate(startOfWeek, "yyyy/M/d")}~${formatDate(endOfWeek, "yyyy/M/d")}`;
   }
@@ -60,7 +66,10 @@ export class PostDailyBlogUseCase {
 
 // Weekly Blog
 const weeklyTemplate = {
-  buildText: async (connectLink: string, avgWakeUpTime: number): Promise<string> => {
+  buildText: async (
+    connectLink: string,
+    avgWakeUpTime: number,
+  ): Promise<string> => {
     return formatTextItems([
       { content: "Last week's average wake-up time", format: "strong" },
       { content: ` ${avgWakeUpTime.toString()}h`, format: "plain" },
@@ -85,15 +94,19 @@ export class PostWeeklyBlogUseCase {
   constructor(
     private readonly scrapboxRepository: ScrapboxRepository,
     private readonly dateProvider: DateProvider,
-    private readonly calculateAverageWakeUpTimeUseCase: CalculateAverageWakeUpTimeUseCase
+    private readonly calculateAverageWakeUpTimeUseCase: CalculateAverageWakeUpTimeUseCase,
   ) {}
 
   async execute(projectName: string): Promise<void> {
     const today = this.dateProvider.now();
     const title = weeklyTemplate.generateTitle(today);
     const connectLinkText = this.getConnectLinkText(today);
-    const avgWakeUpTime = await this.calculateAverageWakeUpTimeUseCase.execute(projectName);
-    const content = await weeklyTemplate.buildText(connectLinkText, avgWakeUpTime);
+    const avgWakeUpTime =
+      await this.calculateAverageWakeUpTimeUseCase.execute(projectName);
+    const content = await weeklyTemplate.buildText(
+      connectLinkText,
+      avgWakeUpTime,
+    );
 
     const page = ScrapboxPage.create({ projectName, title, content });
 

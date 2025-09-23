@@ -5,7 +5,7 @@ import { postToScrapbox } from "@/infrastructure/adapters/scrapbox/postToScrapbo
 import { ScrapboxPayloadBuilder } from "./scrapbox-payload-builder";
 
 export class ScrapboxRepositoryImpl implements ScrapboxRepository {
-  constructor(private readonly sessionId: string) { }
+  constructor(private readonly sessionId: string) {}
 
   async post(page: ScrapboxPage): Promise<void> {
     const builder = new ScrapboxPayloadBuilder();
@@ -19,20 +19,25 @@ export class ScrapboxRepositoryImpl implements ScrapboxRepository {
     return await checkPageExist(projectName, title);
   }
 
-  async getPage(projectName: string, title: string): Promise<ScrapboxPage | null> {
+  async getPage(
+    projectName: string,
+    title: string,
+  ): Promise<ScrapboxPage | null> {
     try {
-      const { getPage } = (await import("@katayama8000/cosense-client")).CosenseClient(projectName);
+      const { getPage } = (
+        await import("@katayama8000/cosense-client")
+      ).CosenseClient(projectName);
       const data = await getPage(title);
       if (!data) return null;
 
       return ScrapboxPage.create({
         projectName,
         title,
-        content: data.lines.map(l => l.text).join("\n"),
-        lines: data.lines.map(l => l.text),
+        content: data.lines.map((l) => l.text).join("\n"),
+        lines: data.lines.map((l) => l.text),
       });
     } catch (error) {
-      console.error('getPage error:', error);
+      console.error("getPage error:", error);
       return null;
     }
   }

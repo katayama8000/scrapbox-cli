@@ -1,4 +1,3 @@
-
 import { ScrapboxRepository } from "@/application/ports/scrapbox-repository";
 import { DateProvider } from "@/application/ports/date-provider";
 import { ScrapboxPage } from "@/domain/models/scrapbox-page";
@@ -20,14 +19,15 @@ const TEMPLATES = {
         { content: "Sleep improvement", format: "link" },
       ]);
     },
-    generateTitle: (date: Date): string => formatDate(DateProviderImpl.getDayjs()(date), "yyyy/M/d (ddd)"),
+    generateTitle: (date: Date): string =>
+      formatDate(DateProviderImpl.getDayjs()(date), "yyyy/M/d (ddd)"),
   },
 };
 
 export class PostSleepLogUseCase {
   constructor(
     private readonly scrapboxRepository: ScrapboxRepository,
-    private readonly dateProvider: DateProvider
+    private readonly dateProvider: DateProvider,
   ) {}
 
   async execute(projectName: string): Promise<void> {
@@ -46,7 +46,10 @@ export class PostSleepLogUseCase {
     page.notify(builder);
     const { projectName: pageProjectName, title: pageTitle } = builder.build();
 
-    const pageExists = await this.scrapboxRepository.exists(pageProjectName, pageTitle);
+    const pageExists = await this.scrapboxRepository.exists(
+      pageProjectName,
+      pageTitle,
+    );
     if (pageExists) {
       console.error(`Page already exists: ${pageTitle}`);
       throw new Error("Page already exists");

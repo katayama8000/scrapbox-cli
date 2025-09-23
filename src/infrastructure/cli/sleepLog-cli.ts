@@ -1,4 +1,3 @@
-
 import "dotenv/config";
 import { PostSleepLogUseCase } from "@/application/use-cases/sleepLog";
 import { ScrapboxRepositoryImpl } from "@/infrastructure/adapters/scrapbox/scrapbox-repository-impl";
@@ -16,7 +15,7 @@ const main = async () => {
 
   const postSleepLogUseCase = new PostSleepLogUseCase(
     scrapboxRepository,
-    dateProvider
+    dateProvider,
   );
 
   try {

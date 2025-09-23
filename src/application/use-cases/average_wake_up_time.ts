@@ -1,4 +1,3 @@
-
 import { ScrapboxRepository } from "@/application/ports/scrapbox-repository";
 import { DateProvider } from "@/application/ports/date-provider";
 import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl";
@@ -8,13 +7,15 @@ import { ScrapboxPayloadBuilder } from "@/infrastructure/adapters/scrapbox/scrap
 export class CalculateAverageWakeUpTimeUseCase {
   constructor(
     private readonly scrapboxRepository: ScrapboxRepository,
-    private readonly dateProvider: DateProvider
+    private readonly dateProvider: DateProvider,
   ) {}
 
   async execute(projectName: string): Promise<number> {
     const thisWeeksPageTitles = this.buildThisWeeksPageTitle();
     const wakeUpTimes = await Promise.all(
-      thisWeeksPageTitles.map((title) => this.fetchWakeUpTime(projectName, title))
+      thisWeeksPageTitles.map((title) =>
+        this.fetchWakeUpTime(projectName, title),
+      ),
     );
     const filteredWakeUpTimes = wakeUpTimes.filter((time) => {
       if (!time) return false;
@@ -29,7 +30,10 @@ export class CalculateAverageWakeUpTimeUseCase {
     return this.calculateAverageWakeUpTime(filteredWakeUpTimes as string[]);
   }
 
-  private async fetchWakeUpTime(projectName: string, pageTitle: string): Promise<string | null> {
+  private async fetchWakeUpTime(
+    projectName: string,
+    pageTitle: string,
+  ): Promise<string | null> {
     const page = await this.scrapboxRepository.getPage(projectName, pageTitle);
     if (!page) {
       return null;
@@ -54,7 +58,8 @@ export class CalculateAverageWakeUpTimeUseCase {
     const dayjs = DateProviderImpl.getDayjs();
     const today = dayjs(this.dateProvider.now());
     const day = today.day();
-    const startOfWeek = day === 0 ? today.subtract(6, "day") : today.subtract(day - 1, "day");
+    const startOfWeek =
+      day === 0 ? today.subtract(6, "day") : today.subtract(day - 1, "day");
     return Array.from({ length: 7 }, (_, i) => {
       const currentDate = startOfWeek.add(i, "day");
       return formatDate(currentDate, "yyyy/M/d (ddd)");
@@ -73,7 +78,7 @@ export class CalculateAverageWakeUpTimeUseCase {
     }
     const totalMinutes = trimmedTimes.reduce(
       (acc, time) => acc + this.parseMinToNum(time),
-      0
+      0,
     );
     return totalMinutes / trimmedTimes.length;
   }

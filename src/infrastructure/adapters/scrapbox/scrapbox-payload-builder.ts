@@ -1,4 +1,4 @@
-import { IScrapboxPageNotification } from '../../../application/ports/scrapbox-page-notification';
+import { IScrapboxPageNotification } from "../../../application/ports/scrapbox-page-notification";
 
 export class ScrapboxPayloadBuilder implements IScrapboxPageNotification {
   private pageProjectName?: string;
@@ -26,9 +26,14 @@ export class ScrapboxPayloadBuilder implements IScrapboxPageNotification {
     return this;
   }
 
-  build(): { projectName: string; title: string; content: string; lines: string[] } {
+  build(): {
+    projectName: string;
+    title: string;
+    content: string;
+    lines: string[];
+  } {
     if (!this.pageProjectName || !this.pageTitle || !this.pageContent) {
-      throw new Error('Project name, title, and content must be provided.');
+      throw new Error("Project name, title, and content must be provided.");
     }
 
     return {

@@ -1,4 +1,4 @@
-import { IScrapboxPageNotification } from '../../application/ports/scrapbox-page-notification';
+import { IScrapboxPageNotification } from "../../application/ports/scrapbox-page-notification";
 
 export class ScrapboxPage {
   private constructor(
@@ -6,7 +6,7 @@ export class ScrapboxPage {
     private readonly title: string,
     private readonly content: string,
     private readonly lines?: string[],
-  ) { }
+  ) {}
 
   static create({
     projectName,
@@ -23,7 +23,10 @@ export class ScrapboxPage {
   }
 
   notify(notification: IScrapboxPageNotification): void {
-    notification.projectName(this.projectName).title(this.title).content(this.content);
+    notification
+      .projectName(this.projectName)
+      .title(this.title)
+      .content(this.content);
     if (this.lines) {
       notification.lines(this.lines);
     }
