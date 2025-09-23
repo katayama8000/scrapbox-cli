@@ -3,7 +3,7 @@ name: Weekly CLI
 on:
   schedule:
     # every Sunday at 10:00 JST (02:00 UTC)
-    - cron: '0 1 * * 0'
+    - cron: "0 1 * * 0"
   workflow_dispatch:
 
 jobs:
@@ -11,6 +11,6 @@ jobs:
     uses: ./.github/workflows/cli_runner.yml
     with:
       cli_command: weekly
-      schedule_title: 'Weekly CLI'
-      color: '#FF0000'
+      schedule_title: "Weekly CLI"
+      color: "#FF0000"
     secrets: inherit

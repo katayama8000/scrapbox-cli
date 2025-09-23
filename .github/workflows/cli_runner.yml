@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: '24'
+          node-version: "24"
           cache: yarn
 
       - name: Install dependencies
@@ -42,20 +42,19 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           title: ${{ inputs.schedule_title }}
-          description: '${{ inputs.schedule_title }} has been executed.'
+          description: "${{ inputs.schedule_title }} has been executed."
           color: ${{ inputs.color }}
-          url: 'https://scrapbox.io/katayama8000/'
-          username: 'Scrapbox Bot'
-
+          url: "https://scrapbox.io/katayama8000/"
+          username: "Scrapbox Bot"
 
       - name: Add Issue to Backlog
         if: failure()
         uses: katayama8000/backlog-issue-creator@0.3.2
         with:
-          backlog_domain: 'tatsufumi.backlog.com'
+          backlog_domain: "tatsufumi.backlog.com"
           api_key: ${{ secrets.BACKLOG_API_KEY }}
-          project_id: '665456'
-          issue_type_id: '3529948'
-          summary: '${{ inputs.schedule_title }} has failed'
-          description: '${{ inputs.schedule_title }} has been executed and failed. Please check the Scrapbox page for details: https://scrapbox.io/katayama8000/'
-          priority_id: '3'
+          project_id: "665456"
+          issue_type_id: "3529948"
+          summary: "${{ inputs.schedule_title }} has failed"
+          description: "${{ inputs.schedule_title }} has been executed and failed. Please check the Scrapbox page for details: https://scrapbox.io/katayama8000/"
+          priority_id: "3"

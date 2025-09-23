@@ -1,10 +1,10 @@
-
 import { ScrapboxRepository } from "@/application/ports/scrapbox-repository";
 import { DateProvider } from "@/application/ports/date-provider";
 import { ScrapboxPage } from "@/domain/models/scrapbox-page";
 import { formatDate } from "@/infrastructure/adapters/formatters/formatDate";
 import { formatTextItems } from "@/infrastructure/adapters/formatters/formatTextItems";
 import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl";
+import { ScrapboxPayloadBuilder } from "@/infrastructure/adapters/scrapbox/scrapbox-payload-builder";
 
 const TEMPLATES = {
   sleepLog: {
@@ -19,15 +19,16 @@ const TEMPLATES = {
         { content: "Sleep improvement", format: "link" },
       ]);
     },
-    generateTitle: (date: Date): string => formatDate(DateProviderImpl.getDayjs()(date), "yyyy/M/d (ddd)"),
+    generateTitle: (date: Date): string =>
+      formatDate(DateProviderImpl.getDayjs()(date), "yyyy/M/d (ddd)"),
   },
 };
 
 export class PostSleepLogUseCase {
   constructor(
     private readonly scrapboxRepository: ScrapboxRepository,
-    private readonly dateProvider: DateProvider
-  ) { }
+    private readonly dateProvider: DateProvider,
+  ) {}
 
   async execute(projectName: string): Promise<void> {
     const template = TEMPLATES.sleepLog;
@@ -41,14 +42,21 @@ export class PostSleepLogUseCase {
       content,
     });
 
-    const pageExists = await this.scrapboxRepository.exists(page);
+    const builder = new ScrapboxPayloadBuilder();
+    page.notify(builder);
+    const { projectName: pageProjectName, title: pageTitle } = builder.build();
+
+    const pageExists = await this.scrapboxRepository.exists(
+      pageProjectName,
+      pageTitle,
+    );
     if (pageExists) {
-      console.error(`Page already exists: ${page.title}`);
+      console.error(`Page already exists: ${pageTitle}`);
       throw new Error("Page already exists");
     }
 
-    console.log(`Writing to Scrapbox: ${page.title}...`);
+    console.log(`Writing to Scrapbox: ${pageTitle}...`);
     await this.scrapboxRepository.post(page);
-    console.log("Successfully written to Scrapbox:", page.title);
+    console.log("Successfully written to Scrapbox:", pageTitle);
   }
 }

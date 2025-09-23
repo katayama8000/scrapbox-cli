@@ -1,4 +1,3 @@
-
 import "dotenv/config";
 import { CalculateAverageWakeUpTimeUseCase } from "@/application/use-cases/average_wake_up_time";
 import { ScrapboxRepositoryImpl } from "@/infrastructure/adapters/scrapbox/scrapbox-repository-impl";
@@ -14,13 +13,12 @@ const main = async () => {
   const scrapboxRepository = new ScrapboxRepositoryImpl(sessionId);
   const dateProvider = new DateProviderImpl();
 
-  const calculateAverageWakeUpTimeUseCase = new CalculateAverageWakeUpTimeUseCase(
-    scrapboxRepository,
-    dateProvider
-  );
+  const calculateAverageWakeUpTimeUseCase =
+    new CalculateAverageWakeUpTimeUseCase(scrapboxRepository, dateProvider);
 
   try {
-    const averageWakeUpTime = await calculateAverageWakeUpTimeUseCase.execute("katayama8000");
+    const averageWakeUpTime =
+      await calculateAverageWakeUpTimeUseCase.execute("katayama8000");
     console.log("Average wake up time:", averageWakeUpTime);
   } catch (error) {
     console.error("Failed to calculate average wake up time:", error);
