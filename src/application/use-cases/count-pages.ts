@@ -1,11 +1,11 @@
-import { ScrapboxRepository } from '@/application/ports/scrapbox-repository';
-import { DateProvider } from '@/application/ports/date-provider';
-import { ScrapboxPage } from '@/domain/models/scrapbox-page';
+import { ScrapboxRepository } from "@/application/ports/scrapbox-repository";
+import { DateProvider } from "@/application/ports/date-provider";
+import { ScrapboxPage } from "@/domain/models/scrapbox-page";
 
 import {
   formatTextItems,
   TextItem,
-} from '@/infrastructure/adapters/formatters/formatTextItems';
+} from "@/infrastructure/adapters/formatters/formatTextItems";
 
 interface MonthlyStats {
   currentCount: number;
@@ -19,7 +19,7 @@ export class CountPagesUseCase {
   constructor(
     private scrapboxRepository: ScrapboxRepository,
     private dateProvider: DateProvider,
-    private projectName: string
+    private projectName: string,
   ) {}
 
   async getScrapboxPageCount(): Promise<number | null> {
@@ -35,7 +35,7 @@ export class CountPagesUseCase {
     try {
       const exists = await this.scrapboxRepository.exists(
         this.projectName,
-        previousMonthTitle
+        previousMonthTitle,
       );
 
       if (!exists) {
@@ -44,7 +44,7 @@ export class CountPagesUseCase {
 
       const page = await this.scrapboxRepository.getPage(
         this.projectName,
-        previousMonthTitle
+        previousMonthTitle,
       );
 
       if (!page) {
@@ -55,7 +55,7 @@ export class CountPagesUseCase {
       const match = page.toString().match(/Total pages: (\d+)/);
       return match ? parseInt(match[1], 10) : null;
     } catch (error) {
-      console.error('Failed to fetch previous month page count:', error);
+      console.error("Failed to fetch previous month page count:", error);
       return null;
     }
   }
@@ -66,7 +66,7 @@ export class CountPagesUseCase {
     const previousPageCount = await this.getPreviousMonthPageCount();
 
     if (currentPageCount === null) {
-      throw new Error('Failed to get current page count');
+      throw new Error("Failed to get current page count");
     }
 
     const currentMonth = this.formatMonthString(now);
@@ -74,7 +74,7 @@ export class CountPagesUseCase {
     const previousMonth =
       previousPageCount !== null
         ? this.formatMonthString(
-            new Date(now.getFullYear(), now.getMonth() - 1, 1)
+            new Date(now.getFullYear(), now.getMonth() - 1, 1),
           )
         : null;
     const difference =
@@ -102,9 +102,9 @@ export class CountPagesUseCase {
     const textItems: TextItem[] = [
       {
         content: `Total pages: ${stats.currentCount}`,
-        format: 'paragraph1',
+        format: "paragraph1",
       },
-      { content: `Recorded on: ${dateString}`, format: 'paragraph1' },
+      { content: `Recorded on: ${dateString}`, format: "paragraph1" },
     ];
 
     // Add comparison with previous month if available
@@ -117,18 +117,18 @@ export class CountPagesUseCase {
       textItems.push(
         {
           content: `Previous month: ${stats.previousCount} pages`,
-          format: 'plain',
+          format: "plain",
         },
-        { content: changeText, format: 'plain' }
+        { content: changeText, format: "plain" },
       );
     } else {
       textItems.push({
-        content: 'Previous month data: Not available',
-        format: 'paragraph1',
+        content: "Previous month data: Not available",
+        format: "paragraph1",
       });
     }
 
-    textItems.push({ content: 'PageCount', format: 'link' });
+    textItems.push({ content: "PageCount", format: "link" });
 
     const text = formatTextItems(textItems);
 
@@ -141,19 +141,19 @@ export class CountPagesUseCase {
 
     const changeInfo =
       stats.difference !== null
-        ? ` (${stats.difference >= 0 ? '+' : ''}${
+        ? ` (${stats.difference >= 0 ? "+" : ""}${
             stats.difference
           } from last month)`
-        : '';
+        : "";
 
     console.log(
-      `Posted monthly page count: ${stats.currentCount} pages${changeInfo}`
+      `Posted monthly page count: ${stats.currentCount} pages${changeInfo}`,
     );
   }
 
   private formatMonthString(date: Date): string {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     return `${year}-${month}`;
   }
 
@@ -161,7 +161,7 @@ export class CountPagesUseCase {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const dayName = dayNames[date.getDay()];
     return `${year}/${month}/${day} (${dayName})`;
   }
