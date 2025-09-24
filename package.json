@@ -7,6 +7,7 @@
     "weekly": "ts-node -r dotenv/config -r tsconfig-paths/register src/infrastructure/cli/blog-cli.ts weekly",
     "sleepLog": "ts-node -r dotenv/config -r tsconfig-paths/register src/infrastructure/cli/sleepLog-cli.ts",
     "wake": "ts-node -r dotenv/config -r tsconfig-paths/register src/infrastructure/cli/wake-cli.ts",
+    "countAllPages": "ts-node -r dotenv/config -r tsconfig-paths/register src/infrastructure/cli/count-pages-cli.ts",
     "typeCheck": "tsc --noEmit",
     "fmt": "npx prettier --write ."
   },
