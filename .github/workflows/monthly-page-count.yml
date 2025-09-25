@@ -1,0 +1,16 @@
+name: Monthly Page Count
+
+on:
+  schedule:
+    # First day of every month at 10:00 JST (01:00 UTC)
+    - cron: "0 1 1 * *"
+  workflow_dispatch:
+
+jobs:
+  call-reusable:
+    uses: ./.github/workflows/cli_runner.yml
+    with:
+      cli_command: countAllPages
+      schedule_title: "Monthly Page Count"
+      color: "#00FF00"
+    secrets: inherit

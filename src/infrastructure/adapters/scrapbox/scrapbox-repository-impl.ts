@@ -41,4 +41,23 @@ export class ScrapboxRepositoryImpl implements ScrapboxRepository {
       return null;
     }
   }
+
+  async getPageCount(projectName: string): Promise<number | null> {
+    const url = `https://scrapbox.io/api/pages/${projectName}`;
+
+    try {
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const pageCount: number = data.count;
+      return pageCount;
+    } catch (error) {
+      console.error("Failed to fetch Scrapbox pages:", error);
+      return null;
+    }
+  }
 }
