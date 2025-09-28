@@ -44,21 +44,24 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
+      - name: Run the CLI
+        env:
+          SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
+        run: |
+          # キャッシュがヒットしなかった場合（ブラウザが存在しない場合）にのみ、インストールを実行
+          if [ "${{ steps.playwright-cache.outputs.cache-hit }}" != "true" ]; then
+            npx playwright install --with-deps
+          fi
+          # メインのCLIコマンドを実行
+          yarn ${{ inputs.cli_command }}
 
       - name: Save Playwright Cache
         uses: actions/cache/save@v4
+        # キャッシュがヒットしなかった場合にのみ、新しいキャッシュを保存
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-
-      - name: Run the CLI
-        env:
-          SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
-        run: yarn ${{ inputs.cli_command }}
 
       - name: Notify Discord
         uses: sarisia/actions-status-discord@v1
