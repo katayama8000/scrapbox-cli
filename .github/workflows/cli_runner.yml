@@ -25,12 +25,6 @@ jobs:
         with:
           deno-version: v2.x
 
-      - name: Get Playwright Version
-        id: playwright-version
-        run: |
-          VERSION_QUOTED=$(jq -r '.imports.playwright' deno.json | sed 's/npm:playwright@//')
-          echo "PLAYWRIGHT_VERSION=$VERSION_QUOTED" >> $GITHUB_ENV
-
       - name: Cache Deno dependencies
         uses: actions/cache@v4
         with:
@@ -39,32 +33,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-deno-
 
-      - name: Restore Playwright Cache
-        uses: actions/cache/restore@v4
-        id: playwright-cache
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
+      - name: Install Playwright browsers
+        run: deno run -A npm:playwright-core install --with-deps
 
       - name: Run the CLI
         env:
           SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
-        run: |
-          # if cache is not hit (browser does not exist), install it
-          if [ "${{ steps.playwright-cache.outputs.cache-hit }}" != "true" ]; then
-            deno run -A npm:playwright-core install --with-deps
-          fi
-          # run the command
-          deno task ${{ inputs.cli_command }}
-
-      - name: Save Playwright Cache
-        uses: actions/cache/save@v4
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+        run: deno task ${{ inputs.cli_command }}
 
       - name: Notify Discord
         uses: sarisia/actions-status-discord@v1
