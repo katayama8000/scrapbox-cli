@@ -1,13 +1,15 @@
-import "dotenv/config";
-import { CountPagesUseCase } from "@/application/use-cases/count-pages";
-import { ScrapboxRepositoryImpl } from "@/infrastructure/adapters/scrapbox/scrapbox-repository-impl";
-import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl";
+/// <reference lib="deno.ns" />
+
+import "dotenv/load.ts";
+import { CountPagesUseCase } from "@/application/use-cases/count-pages.ts";
+import { ScrapboxRepositoryImpl } from "@/infrastructure/adapters/scrapbox/scrapbox-repository-impl.ts";
+import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl.ts";
 
 const main = async () => {
-  const sessionId = process.env.SCRAPBOX_SID;
+  const sessionId = Deno.env.get("SCRAPBOX_SID");
   if (!sessionId) {
     console.error("Please set the SCRAPBOX_SID environment variable.");
-    process.exit(1);
+    Deno.exit(1);
   }
 
   const projectName = "katayama8000";
@@ -27,8 +29,9 @@ const main = async () => {
     );
 
     if (stats.previousCount !== null && stats.difference !== null) {
-      const changeText =
-        stats.difference >= 0 ? `+${stats.difference}` : `${stats.difference}`;
+      const changeText = stats.difference >= 0
+        ? `+${stats.difference}`
+        : `${stats.difference}`;
       console.log(
         `Previous month: ${stats.previousCount} pages (${changeText} change)`,
       );
@@ -40,11 +43,11 @@ const main = async () => {
     console.log("Successfully posted monthly page count statistics.");
   } catch (error) {
     console.error("Failed to post monthly page count statistics:", error);
-    process.exit(1);
+    Deno.exit(1);
   }
 };
 
 main().catch((error) => {
   console.error("Unexpected error:", error);
-  process.exit(1);
+  Deno.exit(1);
 });

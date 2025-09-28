@@ -1,8 +1,8 @@
-import { ScrapboxRepository } from "@/application/ports/scrapbox-repository";
-import { ScrapboxPage } from "@/domain/models/scrapbox-page";
-import { checkPageExist } from "@/infrastructure/adapters/scrapbox/checkPageExist";
-import { postToScrapbox } from "@/infrastructure/adapters/scrapbox/postToScrapbox";
-import { ScrapboxPayloadBuilder } from "./scrapbox-payload-builder";
+import { ScrapboxRepository } from "@/application/ports/scrapbox-repository.ts";
+import { ScrapboxPage } from "@/domain/models/scrapbox-page.ts";
+import { checkPageExist } from "@/infrastructure/adapters/scrapbox/checkPageExist.ts";
+import { postToScrapbox } from "@/infrastructure/adapters/scrapbox/postToScrapbox.ts";
+import { ScrapboxPayloadBuilder } from "./scrapbox-payload-builder.ts";
 
 export class ScrapboxRepositoryImpl implements ScrapboxRepository {
   constructor(private readonly sessionId: string) {}

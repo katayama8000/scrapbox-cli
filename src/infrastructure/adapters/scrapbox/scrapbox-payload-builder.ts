@@ -1,4 +1,4 @@
-import { IScrapboxPageNotification } from "../../../application/ports/scrapbox-page-notification";
+import { IScrapboxPageNotification } from "@/application/ports/scrapbox-page-notification.ts";
 
 export class ScrapboxPayloadBuilder implements IScrapboxPageNotification {
   private pageProjectName?: string;

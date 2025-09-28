@@ -1,8 +1,8 @@
-import { ScrapboxRepository } from "@/application/ports/scrapbox-repository";
-import { DateProvider } from "@/application/ports/date-provider";
-import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl";
-import { formatDate } from "@/infrastructure/adapters/formatters/formatDate";
-import { ScrapboxPayloadBuilder } from "@/infrastructure/adapters/scrapbox/scrapbox-payload-builder";
+import { ScrapboxRepository } from "@/application/ports/scrapbox-repository.ts";
+import { DateProvider } from "@/application/ports/date-provider.ts";
+import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl.ts";
+import { formatDate } from "@/infrastructure/adapters/formatters/formatDate.ts";
+import { ScrapboxPayloadBuilder } from "@/infrastructure/adapters/scrapbox/scrapbox-payload-builder.ts";
 
 export class CalculateAverageWakeUpTimeUseCase {
   constructor(
@@ -14,7 +14,7 @@ export class CalculateAverageWakeUpTimeUseCase {
     const thisWeeksPageTitles = this.buildThisWeeksPageTitle();
     const wakeUpTimes = await Promise.all(
       thisWeeksPageTitles.map((title) =>
-        this.fetchWakeUpTime(projectName, title),
+        this.fetchWakeUpTime(projectName, title)
       ),
     );
     const filteredWakeUpTimes = wakeUpTimes.filter((time) => {
@@ -58,8 +58,9 @@ export class CalculateAverageWakeUpTimeUseCase {
     const dayjs = DateProviderImpl.getDayjs();
     const today = dayjs(this.dateProvider.now());
     const day = today.day();
-    const startOfWeek =
-      day === 0 ? today.subtract(6, "day") : today.subtract(day - 1, "day");
+    const startOfWeek = day === 0
+      ? today.subtract(6, "day")
+      : today.subtract(day - 1, "day");
     return Array.from({ length: 7 }, (_, i) => {
       const currentDate = startOfWeek.add(i, "day");
       return formatDate(currentDate, "yyyy/M/d (ddd)");
