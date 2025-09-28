@@ -18,14 +18,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: "24"
           cache: yarn
+
+      - name: Get Playwright Version
+        id: playwright-version
+        run: |
+          VERSION_QUOTED=$(grep -o '"playwright": *"[^"]*"' package.json | head -1 | sed 's/.*: *"\([^"]*\)"/\1/')
+          VERSION=$(echo $VERSION_QUOTED | tr -d '"')
+          echo "PLAYWRIGHT_VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Restore Playwright Cache
+        uses: actions/cache/restore@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -33,7 +47,21 @@ jobs:
       - name: Run the CLI
         env:
           SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
-        run: yarn ${{ inputs.cli_command }}
+        run: |
+          # if cache is not hit (browser does not exist), install it
+          if [ "${{ steps.playwright-cache.outputs.cache-hit }}" != "true" ]; then
+            npx playwright install --with-deps
+          fi
+          # run the command
+          yarn ${{ inputs.cli_command }}
+
+      - name: Save Playwright Cache
+        uses: actions/cache/save@v4
+        # if cache is not hit (browser does not exist), save a new cache
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
 
       - name: Notify Discord
         uses: sarisia/actions-status-discord@v1

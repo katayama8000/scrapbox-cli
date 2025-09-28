@@ -8,6 +8,7 @@
     "target": "ES2024",
     "esModuleInterop": true,
     "moduleResolution": "nodenext",
+    "types": ["node"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]

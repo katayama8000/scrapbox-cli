@@ -51,8 +51,7 @@ export class PostSleepLogUseCase {
       pageTitle,
     );
     if (pageExists) {
-      console.error(`Page already exists: ${pageTitle}`);
-      throw new Error("Page already exists");
+      throw new Error(`Page already exists: ${pageTitle}`);
     }
 
     console.log(`Writing to Scrapbox: ${pageTitle}...`);
