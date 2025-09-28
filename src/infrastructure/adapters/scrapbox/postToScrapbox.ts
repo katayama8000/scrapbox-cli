@@ -9,7 +9,9 @@ export const postToScrapbox = async (
 ): Promise<void> => {
   const body = typeof content === "function" ? await content() : content;
   const scrapboxUrl = new URL(
-    `https://scrapbox.io/${projectName}/${encodeURIComponent(title)}?body=${encodeURIComponent(body)}`,
+    `https://scrapbox.io/${projectName}/${encodeURIComponent(title)}?body=${
+      encodeURIComponent(body)
+    }`,
   );
   const { browser, page } = await createBrowserSession(sessionId);
 

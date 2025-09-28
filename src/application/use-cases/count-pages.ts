@@ -71,14 +71,14 @@ export class CountPagesUseCase {
 
     const currentMonth = this.formatMonthString(now);
 
-    const previousMonth =
-      previousPageCount !== null
-        ? this.formatMonthString(
-            new Date(now.getFullYear(), now.getMonth() - 1, 1),
-          )
-        : null;
-    const difference =
-      previousPageCount !== null ? currentPageCount - previousPageCount : null;
+    const previousMonth = previousPageCount !== null
+      ? this.formatMonthString(
+        new Date(now.getFullYear(), now.getMonth() - 1, 1),
+      )
+      : null;
+    const difference = previousPageCount !== null
+      ? currentPageCount - previousPageCount
+      : null;
 
     return {
       currentCount: currentPageCount,
@@ -109,10 +109,9 @@ export class CountPagesUseCase {
 
     // Add comparison with previous month if available
     if (stats.previousCount !== null && stats.difference !== null) {
-      const changeText =
-        stats.difference >= 0
-          ? `📈 +${stats.difference} pages from ${stats.previousMonth}`
-          : `📉 ${stats.difference} pages from ${stats.previousMonth}`;
+      const changeText = stats.difference >= 0
+        ? `📈 +${stats.difference} pages from ${stats.previousMonth}`
+        : `📉 ${stats.difference} pages from ${stats.previousMonth}`;
 
       textItems.push(
         {
@@ -139,12 +138,11 @@ export class CountPagesUseCase {
     });
     await this.scrapboxRepository.post(page);
 
-    const changeInfo =
-      stats.difference !== null
-        ? ` (${stats.difference >= 0 ? "+" : ""}${
-            stats.difference
-          } from last month)`
-        : "";
+    const changeInfo = stats.difference !== null
+      ? ` (${
+        stats.difference >= 0 ? "+" : ""
+      }${stats.difference} from last month)`
+      : "";
 
     console.log(
       `Posted monthly page count: ${stats.currentCount} pages${changeInfo}`,

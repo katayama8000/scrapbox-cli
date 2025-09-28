@@ -1,5 +1,5 @@
 import "dotenv/load.ts";
-import { chromium, type Browser, type Page } from "playwright";
+import { type Browser, chromium, type Page } from "playwright";
 
 export const createBrowserSession = async (
   sessionId: string,

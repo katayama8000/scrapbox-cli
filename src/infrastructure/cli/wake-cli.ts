@@ -19,8 +19,9 @@ const main = async () => {
     new CalculateAverageWakeUpTimeUseCase(scrapboxRepository, dateProvider);
 
   try {
-    const averageWakeUpTime =
-      await calculateAverageWakeUpTimeUseCase.execute("katayama8000");
+    const averageWakeUpTime = await calculateAverageWakeUpTimeUseCase.execute(
+      "katayama8000",
+    );
     console.log("Average wake up time:", averageWakeUpTime);
   } catch (error) {
     console.error("Failed to calculate average wake up time:", error);

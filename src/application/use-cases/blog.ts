@@ -60,10 +60,12 @@ export class PostDailyBlogUseCase {
       ? d.subtract(6, "day")
       : d.subtract(d.day() - 1, "day");
     const endOfWeek = startOfWeek.add(6, "day");
-    return `${formatDate(startOfWeek, "yyyy/M/d")}~${formatDate(
-      endOfWeek,
-      "yyyy/M/d",
-    )}`;
+    return `${formatDate(startOfWeek, "yyyy/M/d")}~${
+      formatDate(
+        endOfWeek,
+        "yyyy/M/d",
+      )
+    }`;
   }
 }
 
@@ -89,10 +91,12 @@ const weeklyTemplate = {
     const d = dayjs(date);
     const startOfNextWeek = d.add(1, "day");
     const endOfNextWeek = startOfNextWeek.add(6, "day");
-    return `${formatDate(startOfNextWeek, "yyyy/M/d")} ~ ${formatDate(
-      endOfNextWeek,
-      "yyyy/M/d",
-    )}`;
+    return `${formatDate(startOfNextWeek, "yyyy/M/d")} ~ ${
+      formatDate(
+        endOfNextWeek,
+        "yyyy/M/d",
+      )
+    }`;
   },
 };
 
@@ -100,15 +104,17 @@ export class PostWeeklyBlogUseCase {
   constructor(
     private readonly scrapboxRepository: ScrapboxRepository,
     private readonly dateProvider: DateProvider,
-    private readonly calculateAverageWakeUpTimeUseCase: CalculateAverageWakeUpTimeUseCase,
+    private readonly calculateAverageWakeUpTimeUseCase:
+      CalculateAverageWakeUpTimeUseCase,
   ) {}
 
   async execute(projectName: string): Promise<void> {
     const today = this.dateProvider.now();
     const title = weeklyTemplate.generateTitle(today);
     const connectLinkText = this.getConnectLinkText(today);
-    const avgWakeUpTime =
-      await this.calculateAverageWakeUpTimeUseCase.execute(projectName);
+    const avgWakeUpTime = await this.calculateAverageWakeUpTimeUseCase.execute(
+      projectName,
+    );
     const content = await weeklyTemplate.buildText(
       connectLinkText,
       avgWakeUpTime,
@@ -133,9 +139,11 @@ export class PostWeeklyBlogUseCase {
     const isSunday = d.day() === 0;
     const startOfWeek = isSunday ? d.add(1, "day") : d.add(8 - d.day(), "day");
     const endOfWeek = startOfWeek.add(6, "day");
-    return `${formatDate(startOfWeek, "yyyy/M/d")}~${formatDate(
-      endOfWeek,
-      "yyyy/M/d",
-    )}`;
+    return `${formatDate(startOfWeek, "yyyy/M/d")}~${
+      formatDate(
+        endOfWeek,
+        "yyyy/M/d",
+      )
+    }`;
   }
 }

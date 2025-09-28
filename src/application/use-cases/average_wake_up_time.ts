@@ -14,7 +14,7 @@ export class CalculateAverageWakeUpTimeUseCase {
     const thisWeeksPageTitles = this.buildThisWeeksPageTitle();
     const wakeUpTimes = await Promise.all(
       thisWeeksPageTitles.map((title) =>
-        this.fetchWakeUpTime(projectName, title),
+        this.fetchWakeUpTime(projectName, title)
       ),
     );
     const filteredWakeUpTimes = wakeUpTimes.filter((time) => {
@@ -58,8 +58,9 @@ export class CalculateAverageWakeUpTimeUseCase {
     const dayjs = DateProviderImpl.getDayjs();
     const today = dayjs(this.dateProvider.now());
     const day = today.day();
-    const startOfWeek =
-      day === 0 ? today.subtract(6, "day") : today.subtract(day - 1, "day");
+    const startOfWeek = day === 0
+      ? today.subtract(6, "day")
+      : today.subtract(day - 1, "day");
     return Array.from({ length: 7 }, (_, i) => {
       const currentDate = startOfWeek.add(i, "day");
       return formatDate(currentDate, "yyyy/M/d (ddd)");
