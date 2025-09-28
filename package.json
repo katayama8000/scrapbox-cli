@@ -17,6 +17,7 @@
     "playwright": "^1.55.1"
   },
   "devDependencies": {
+    "@types/node": "^24.5.2",
     "dotenv": "17.2.2",
     "ts-node": "10.9.2",
     "tsconfig-paths": "4.2.0",
