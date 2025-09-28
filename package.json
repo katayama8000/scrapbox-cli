@@ -14,7 +14,7 @@
   "dependencies": {
     "@katayama8000/cosense-client": "npm:@jsr/katayama8000__cosense-client",
     "dayjs": "1.11.18",
-    "puppeteer": "24.22.0"
+    "playwright": "^1.55.1"
   },
   "devDependencies": {
     "dotenv": "17.2.2",

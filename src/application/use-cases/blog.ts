@@ -46,7 +46,8 @@ export class PostDailyBlogUseCase {
     const { projectName: pageProjectName, title: pageTitle } = builder.build();
 
     if (await this.scrapboxRepository.exists(pageProjectName, pageTitle)) {
-      throw new Error(`Page already exists: ${pageTitle}`);
+      console.log(`Page already exists: ${pageTitle}. Skipping creation.`);
+      return;
     }
 
     await this.scrapboxRepository.post(page);
@@ -60,7 +61,10 @@ export class PostDailyBlogUseCase {
       ? d.subtract(6, "day")
       : d.subtract(d.day() - 1, "day");
     const endOfWeek = startOfWeek.add(6, "day");
-    return `${formatDate(startOfWeek, "yyyy/M/d")}~${formatDate(endOfWeek, "yyyy/M/d")}`;
+    return `${formatDate(startOfWeek, "yyyy/M/d")}~${formatDate(
+      endOfWeek,
+      "yyyy/M/d",
+    )}`;
   }
 }
 
@@ -86,7 +90,10 @@ const weeklyTemplate = {
     const d = dayjs(date);
     const startOfNextWeek = d.add(1, "day");
     const endOfNextWeek = startOfNextWeek.add(6, "day");
-    return `${formatDate(startOfNextWeek, "yyyy/M/d")} ~ ${formatDate(endOfNextWeek, "yyyy/M/d")}`;
+    return `${formatDate(startOfNextWeek, "yyyy/M/d")} ~ ${formatDate(
+      endOfNextWeek,
+      "yyyy/M/d",
+    )}`;
   },
 };
 
@@ -115,7 +122,8 @@ export class PostWeeklyBlogUseCase {
     const { projectName: pageProjectName, title: pageTitle } = builder.build();
 
     if (await this.scrapboxRepository.exists(pageProjectName, pageTitle)) {
-      throw new Error(`Page already exists: ${pageTitle}`);
+      console.log(`Page already exists: ${pageTitle}. Skipping creation.`);
+      return;
     }
 
     await this.scrapboxRepository.post(page);
@@ -127,6 +135,9 @@ export class PostWeeklyBlogUseCase {
     const isSunday = d.day() === 0;
     const startOfWeek = isSunday ? d.add(1, "day") : d.add(8 - d.day(), "day");
     const endOfWeek = startOfWeek.add(6, "day");
-    return `${formatDate(startOfWeek, "yyyy/M/d")}~${formatDate(endOfWeek, "yyyy/M/d")}`;
+    return `${formatDate(startOfWeek, "yyyy/M/d")}~${formatDate(
+      endOfWeek,
+      "yyyy/M/d",
+    )}`;
   }
 }
