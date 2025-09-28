@@ -18,11 +18,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: '24'
           cache: yarn
@@ -30,7 +28,8 @@ jobs:
       - name: Get Playwright Version
         id: playwright-version
         run: |
-          VERSION=$(grep -o '"@playwright/test": *"[^"]*"' package.json | head -1 | sed 's/.*: *"\([^"]*\)"/\1/')
+          VERSION_QUOTED=$(grep -o '"playwright": *"[^"]*"' package.json | head -1 | sed 's/.*: *"\([^"]*\)"/\1/')
+          VERSION=$(echo $VERSION_QUOTED | tr -d '"')
           echo "PLAYWRIGHT_VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Restore Playwright Cache
