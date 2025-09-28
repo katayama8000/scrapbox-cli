@@ -11,11 +11,9 @@ This CLI allows you to control Scrapbox directly from your terminal.
    cd scrapbox-cli
    ```
 
-2. **Install Dependencies**
+2. **Install Deno**
 
-   ```bash
-   yarn install
-   ```
+   If you don't have Deno installed, you can install it from here: [https://deno.land/manual/getting_started/installation](https://deno.land/manual/getting_started/installation)
 
 3. **Configure Environment**
    - Copy `.env.dist` to `.env` and set your Scrapbox Session ID in `.env`:
@@ -24,13 +22,14 @@ This CLI allows you to control Scrapbox directly from your terminal.
      ```
 
 4. **Run Commands**
+   - Deno automatically downloads dependencies on the first run.
    - For daily updates:
      ```bash
-     yarn daily
+     deno task daily
      ```
    - For weekly updates:
      ```bash
-     yarn weekly
+     deno task weekly
      ```
 
 5. **Run on GitHub Actions**

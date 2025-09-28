@@ -13,11 +13,11 @@
     "strict": true
   },
   "tasks": {
-    "daily": "deno run --allow-net --allow-env --allow-read --allow-run --unstable --allow-sys src/infrastructure/cli/blog-cli.ts daily",
-    "weekly": "deno run --allow-net --allow-env --allow-read --allow-run --unstable --allow-sys src/infrastructure/cli/blog-cli.ts weekly",
-    "sleepLog": "deno run --allow-net --allow-env --allow-read --allow-run --unstable --allow-sys src/infrastructure/cli/sleepLog-cli.ts",
-    "wake": "deno run --allow-net --allow-env --allow-read --allow-run --unstable --allow-sys src/infrastructure/cli/wake-cli.ts",
-    "countAllPages": "deno run --allow-net --allow-env --allow-read --allow-run --unstable --allow-sys src/infrastructure/cli/count-pages-cli.ts",
+    "daily": "deno run --allow-net --allow-env --allow-read --allow-run --allow-sys --allow-write src/infrastructure/cli/blog-cli.ts daily",
+    "weekly": "deno run --allow-net --allow-env --allow-read --allow-run --allow-sys --allow-write src/infrastructure/cli/blog-cli.ts weekly",
+    "sleepLog": "deno run --allow-net --allow-env --allow-read --allow-run --allow-sys --allow-write src/infrastructure/cli/sleepLog-cli.ts",
+    "wake": "deno run --allow-net --allow-env --allow-read --allow-run --allow-sys --allow-write src/infrastructure/cli/wake-cli.ts",
+    "countAllPages": "deno run --allow-net --allow-env --allow-read --allow-run --allow-sys --allow-write src/infrastructure/cli/count-pages-cli.ts",
     "typeCheck": "deno check **/*.ts",
     "fmt": "deno fmt"
   }
