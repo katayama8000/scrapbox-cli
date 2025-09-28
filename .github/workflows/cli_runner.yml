@@ -48,16 +48,16 @@ jobs:
         env:
           SCRAPBOX_SID: ${{ secrets.SCRAPBOX_SID }}
         run: |
-          # キャッシュがヒットしなかった場合（ブラウザが存在しない場合）にのみ、インストールを実行
+          # if cache is not hit (browser does not exist), install it
           if [ "${{ steps.playwright-cache.outputs.cache-hit }}" != "true" ]; then
             npx playwright install --with-deps
           fi
-          # メインのCLIコマンドを実行
+          # run the command
           yarn ${{ inputs.cli_command }}
 
       - name: Save Playwright Cache
         uses: actions/cache/save@v4
-        # キャッシュがヒットしなかった場合にのみ、新しいキャッシュを保存
+        # if cache is not hit (browser does not exist), save a new cache
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         with:
           path: ~/.cache/ms-playwright
