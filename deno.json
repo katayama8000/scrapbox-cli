@@ -1,0 +1,24 @@
+{
+  "imports": {
+    "@/": "./src/",
+    "dayjs": "npm:dayjs@1.11.10",
+    "dayjs/plugin/timezone.js": "npm:dayjs@1.11.10/plugin/timezone.js",
+    "playwright": "npm:playwright@1.45.3",
+    "dotenv/load.ts": "https://deno.land/std@0.224.0/dotenv/load.ts",
+    "@katayama8000/cosense-client": "jsr:@katayama8000/cosense-client"
+  },
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM", "deno.ns"],
+    "strict": true
+  },
+  "tasks": {
+    "daily": "deno run --allow-net --allow-env --allow-read --allow-run --unstable --allow-sys src/infrastructure/cli/blog-cli.ts daily",
+    "weekly": "deno run --allow-net --allow-env --allow-read --allow-run --unstable --allow-sys src/infrastructure/cli/blog-cli.ts weekly",
+    "sleepLog": "deno run --allow-net --allow-env --allow-read --allow-run --unstable --allow-sys src/infrastructure/cli/sleepLog-cli.ts",
+    "wake": "deno run --allow-net --allow-env --allow-read --allow-run --unstable --allow-sys src/infrastructure/cli/wake-cli.ts",
+    "countAllPages": "deno run --allow-net --allow-env --allow-read --allow-run --unstable --allow-sys src/infrastructure/cli/count-pages-cli.ts",
+    "typeCheck": "deno check **/*.ts",
+    "fmt": "deno fmt"
+  }
+}

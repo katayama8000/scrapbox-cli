@@ -1,8 +1,8 @@
-import { ScrapboxRepository } from "@/application/ports/scrapbox-repository";
-import { DateProvider } from "@/application/ports/date-provider";
-import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl";
-import { formatDate } from "@/infrastructure/adapters/formatters/formatDate";
-import { ScrapboxPayloadBuilder } from "@/infrastructure/adapters/scrapbox/scrapbox-payload-builder";
+import { ScrapboxRepository } from "@/application/ports/scrapbox-repository.ts";
+import { DateProvider } from "@/application/ports/date-provider.ts";
+import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl.ts";
+import { formatDate } from "@/infrastructure/adapters/formatters/formatDate.ts";
+import { ScrapboxPayloadBuilder } from "@/infrastructure/adapters/scrapbox/scrapbox-payload-builder.ts";
 
 export class CalculateAverageWakeUpTimeUseCase {
   constructor(

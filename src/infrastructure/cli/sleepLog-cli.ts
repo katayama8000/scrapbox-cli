@@ -1,13 +1,15 @@
-import "dotenv/config";
-import { PostSleepLogUseCase } from "@/application/use-cases/sleepLog";
-import { ScrapboxRepositoryImpl } from "@/infrastructure/adapters/scrapbox/scrapbox-repository-impl";
-import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl";
+/// <reference lib="deno.ns" />
+
+import "dotenv/load.ts";
+import { PostSleepLogUseCase } from "@/application/use-cases/sleepLog.ts";
+import { ScrapboxRepositoryImpl } from "@/infrastructure/adapters/scrapbox/scrapbox-repository-impl.ts";
+import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl.ts";
 
 const main = async () => {
-  const sessionId = process.env.SCRAPBOX_SID;
+  const sessionId = Deno.env.get("SCRAPBOX_SID");
   if (!sessionId) {
     console.error("Please set the SCRAPBOX_SID environment variable.");
-    process.exit(1);
+    Deno.exit(1);
   }
 
   const scrapboxRepository = new ScrapboxRepositoryImpl(sessionId);
@@ -22,11 +24,11 @@ const main = async () => {
     await postSleepLogUseCase.execute("katayama8000");
   } catch (error) {
     console.error("Failed to post sleep log:", error);
-    process.exit(1);
+    Deno.exit(1);
   }
 };
 
 main().catch((e) => {
   console.error(e);
-  process.exit(1);
+  Deno.exit(1);
 });

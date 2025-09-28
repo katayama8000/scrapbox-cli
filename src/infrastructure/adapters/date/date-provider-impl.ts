@@ -1,6 +1,6 @@
-import { DateProvider } from "../../../application/ports/date-provider";
+import { DateProvider } from "@/application/ports/date-provider.ts";
 import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
+import timezone from "dayjs/plugin/timezone.js";
 
 dayjs.extend(timezone);
 dayjs.tz.setDefault("Asia/Tokyo");

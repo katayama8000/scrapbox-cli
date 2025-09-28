@@ -1,4 +1,4 @@
-import { ScrapboxPage } from "@/domain/models/scrapbox-page";
+import { ScrapboxPage } from "@/domain/models/scrapbox-page.ts";
 
 export interface ScrapboxRepository {
   post(page: ScrapboxPage): Promise<void>;

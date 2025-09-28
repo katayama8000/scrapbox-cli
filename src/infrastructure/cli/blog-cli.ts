@@ -1,23 +1,25 @@
-import "dotenv/config";
+/// <reference lib="deno.ns" />
+
+import "dotenv/load.ts";
 import {
   PostDailyBlogUseCase,
   PostWeeklyBlogUseCase,
-} from "@/application/use-cases/blog";
-import { CalculateAverageWakeUpTimeUseCase } from "@/application/use-cases/average_wake_up_time";
-import { ScrapboxRepositoryImpl } from "@/infrastructure/adapters/scrapbox/scrapbox-repository-impl";
-import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl";
+} from "@/application/use-cases/blog.ts";
+import { CalculateAverageWakeUpTimeUseCase } from "@/application/use-cases/average_wake_up_time.ts";
+import { ScrapboxRepositoryImpl } from "@/infrastructure/adapters/scrapbox/scrapbox-repository-impl.ts";
+import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl.ts";
 
 const main = async () => {
-  const command = process.argv[2];
+  const command = Deno.args[0];
   if (command !== "daily" && command !== "weekly") {
-    console.error("Usage: yarn <daily|weekly>");
-    process.exit(1);
+    console.error("Usage: deno task <daily|weekly>");
+    Deno.exit(1);
   }
 
-  const sessionId = process.env.SCRAPBOX_SID;
+  const sessionId = Deno.env.get("SCRAPBOX_SID");
   if (!sessionId) {
     console.error("Please set the SCRAPBOX_SID environment variable.");
-    process.exit(1);
+    Deno.exit(1);
   }
 
   const scrapboxRepository = new ScrapboxRepositoryImpl(sessionId);
@@ -33,7 +35,7 @@ const main = async () => {
       console.log("Successfully posted daily blog.");
     } catch (error) {
       console.error("Failed to post daily blog:", error);
-      process.exit(1);
+      Deno.exit(1);
     }
   } else if (command === "weekly") {
     const calculateAverageWakeUpTimeUseCase =
@@ -48,12 +50,12 @@ const main = async () => {
       console.log("Successfully posted weekly blog.");
     } catch (error) {
       console.error("Failed to post weekly blog:", error);
-      process.exit(1);
+      Deno.exit(1);
     }
   }
 };
 
 main().catch((e) => {
   console.error(e);
-  process.exit(1);
+  Deno.exit(1);
 });

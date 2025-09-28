@@ -1,5 +1,5 @@
-import { checkPageExist } from "./checkPageExist";
-import { createBrowserSession } from "./createBrowserSession";
+import { checkPageExist } from "./checkPageExist.ts";
+import { createBrowserSession } from "./createBrowserSession.ts";
 
 export const postToScrapbox = async (
   sessionId: string,

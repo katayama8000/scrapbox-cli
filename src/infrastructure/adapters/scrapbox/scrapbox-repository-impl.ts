@@ -1,8 +1,8 @@
-import { ScrapboxRepository } from "@/application/ports/scrapbox-repository";
-import { ScrapboxPage } from "@/domain/models/scrapbox-page";
-import { checkPageExist } from "@/infrastructure/adapters/scrapbox/checkPageExist";
-import { postToScrapbox } from "@/infrastructure/adapters/scrapbox/postToScrapbox";
-import { ScrapboxPayloadBuilder } from "./scrapbox-payload-builder";
+import { ScrapboxRepository } from '@/application/ports/scrapbox-repository.ts';
+import { ScrapboxPage } from '@/domain/models/scrapbox-page.ts';
+import { checkPageExist } from '@/infrastructure/adapters/scrapbox/checkPageExist.ts';
+import { postToScrapbox } from '@/infrastructure/adapters/scrapbox/postToScrapbox.ts';
+import { ScrapboxPayloadBuilder } from './scrapbox-payload-builder.ts';
 
 export class ScrapboxRepositoryImpl implements ScrapboxRepository {
   constructor(private readonly sessionId: string) {}
@@ -21,11 +21,11 @@ export class ScrapboxRepositoryImpl implements ScrapboxRepository {
 
   async getPage(
     projectName: string,
-    title: string,
+    title: string
   ): Promise<ScrapboxPage | null> {
     try {
       const { getPage } = (
-        await import("@katayama8000/cosense-client")
+        await import('@katayama8000/cosense-client')
       ).CosenseClient(projectName);
       const data = await getPage(title);
       if (!data) return null;
@@ -33,11 +33,11 @@ export class ScrapboxRepositoryImpl implements ScrapboxRepository {
       return ScrapboxPage.create({
         projectName,
         title,
-        content: data.lines.map((l) => l.text).join("\n"),
+        content: data.lines.map((l) => l.text).join('\n'),
         lines: data.lines.map((l) => l.text),
       });
     } catch (error) {
-      console.error("getPage error:", error);
+      console.error('getPage error:', error);
       return null;
     }
   }
@@ -56,7 +56,7 @@ export class ScrapboxRepositoryImpl implements ScrapboxRepository {
       const pageCount: number = data.count;
       return pageCount;
     } catch (error) {
-      console.error("Failed to fetch Scrapbox pages:", error);
+      console.error('Failed to fetch Scrapbox pages:', error);
       return null;
     }
   }

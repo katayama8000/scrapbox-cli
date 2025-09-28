@@ -1,11 +1,11 @@
-import { ScrapboxRepository } from "@/application/ports/scrapbox-repository";
-import { DateProvider } from "@/application/ports/date-provider";
-import { ScrapboxPage } from "@/domain/models/scrapbox-page";
+import { ScrapboxRepository } from "@/application/ports/scrapbox-repository.ts";
+import { DateProvider } from "@/application/ports/date-provider.ts";
+import { ScrapboxPage } from "@/domain/models/scrapbox-page.ts";
 
 import {
   formatTextItems,
   TextItem,
-} from "@/infrastructure/adapters/formatters/formatTextItems";
+} from "@/infrastructure/adapters/formatters/formatTextItems.ts";
 
 interface MonthlyStats {
   currentCount: number;
