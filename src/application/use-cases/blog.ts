@@ -79,9 +79,8 @@ const weeklyTemplate = {
       { content: "Last week's average wake-up time", format: "strong" },
       { content: ` ${avgWakeUpTime.toString()}h`, format: "plain" },
       { content: "Goals", format: "strong" },
-      { content: "New things", format: "strong" },
-      { content: "Reflections", format: "strong" },
-      { content: "Thoughts", format: "strong" },
+      { content: "Try somwthing new", format: "strong" },
+      { content: "How was the week", format: "strong" },
       { content: connectLink, format: "link" },
       { content: "weekly", format: "link" },
     ]);
