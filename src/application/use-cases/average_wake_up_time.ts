@@ -81,6 +81,7 @@ export class CalculateAverageWakeUpTimeUseCase {
       (acc, time) => acc + this.parseMinToNum(time),
       0,
     );
-    return totalMinutes / trimmedTimes.length;
+    const average = totalMinutes / trimmedTimes.length;
+    return Math.round(average * 1000) / 1000;
   }
 }
