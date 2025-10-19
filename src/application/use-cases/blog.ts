@@ -5,6 +5,7 @@ import { formatDate } from "@/infrastructure/adapters/formatters/formatDate.ts";
 import { formatTextItems } from "@/infrastructure/adapters/formatters/formatTextItems.ts";
 import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl.ts";
 import { CalculateAverageWakeUpTimeUseCase } from "@/application/use-cases/average_wake_up_time.ts";
+import { CalculateAverageSleepQualityUseCase } from "@/application/use-cases/calculate_average_sleep_quality.ts";
 import { ScrapboxPayloadBuilder } from "@/infrastructure/adapters/scrapbox/scrapbox-payload-builder.ts";
 
 // Daily Blog
@@ -17,7 +18,7 @@ const dailyTemplate = {
         content: "https://tatsufumi.backlog.com/board/FAMILY",
         format: "nestedPlain",
       },
-      { content: "How you feel when you wake up", format: "paragraph1" },
+      { content: "Score sleep quality", format: "paragraph1" },
       { content: "How was the day?", format: "paragraph1" },
       { content: connectLink, format: "link" },
       { content: "daily", format: "link" },
@@ -71,13 +72,16 @@ export class PostDailyBlogUseCase {
 
 // Weekly Blog
 const weeklyTemplate = {
-  buildText: async (
+  buildText: (
     connectLink: string,
     avgWakeUpTime: number,
-  ): Promise<string> => {
+    avgSleepQuality: number,
+  ): string => {
     return formatTextItems([
       { content: "Last week's average wake-up time", format: "strong" },
       { content: ` ${avgWakeUpTime.toString()}h`, format: "plain" },
+      { content: "Last week's average sleep quality", format: "strong" },
+      { content: ` ${avgSleepQuality.toString()}`, format: "plain" },
       { content: "Goals", format: "strong" },
       { content: "Try somwthing new", format: "strong" },
       { content: "How was the week", format: "strong" },
@@ -105,6 +109,8 @@ export class PostWeeklyBlogUseCase {
     private readonly dateProvider: DateProvider,
     private readonly calculateAverageWakeUpTimeUseCase:
       CalculateAverageWakeUpTimeUseCase,
+    private readonly calculateAverageSleepQualityUseCase:
+      CalculateAverageSleepQualityUseCase,
   ) {}
 
   async execute(projectName: string): Promise<void> {
@@ -114,9 +120,12 @@ export class PostWeeklyBlogUseCase {
     const avgWakeUpTime = await this.calculateAverageWakeUpTimeUseCase.execute(
       projectName,
     );
-    const content = await weeklyTemplate.buildText(
+    const avgSleepQuality = await this.calculateAverageSleepQualityUseCase
+      .execute(projectName);
+    const content = weeklyTemplate.buildText(
       connectLinkText,
       avgWakeUpTime,
+      avgSleepQuality,
     );
 
     const page = ScrapboxPage.create({ projectName, title, content });

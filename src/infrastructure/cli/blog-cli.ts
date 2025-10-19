@@ -6,6 +6,7 @@ import {
   PostWeeklyBlogUseCase,
 } from "@/application/use-cases/blog.ts";
 import { CalculateAverageWakeUpTimeUseCase } from "@/application/use-cases/average_wake_up_time.ts";
+import { CalculateAverageSleepQualityUseCase } from "@/application/use-cases/calculate_average_sleep_quality.ts";
 import { ScrapboxRepositoryImpl } from "@/infrastructure/adapters/scrapbox/scrapbox-repository-impl.ts";
 import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl.ts";
 
@@ -40,10 +41,13 @@ const main = async () => {
   } else if (command === "weekly") {
     const calculateAverageWakeUpTimeUseCase =
       new CalculateAverageWakeUpTimeUseCase(scrapboxRepository, dateProvider);
+    const calculateAverageSleepQualityUseCase =
+      new CalculateAverageSleepQualityUseCase(scrapboxRepository, dateProvider);
     const postWeeklyBlogUseCase = new PostWeeklyBlogUseCase(
       scrapboxRepository,
       dateProvider,
       calculateAverageWakeUpTimeUseCase,
+      calculateAverageSleepQualityUseCase,
     );
     try {
       await postWeeklyBlogUseCase.execute("katayama8000");
