@@ -16,8 +16,8 @@ export const postToScrapbox = async (
   const { browser, page } = await createBrowserSession(sessionId);
 
   if (await checkPageExist(projectName, title)) {
-    console.error(`Page already exists: ${title}`);
-    throw new Error("Page already exists");
+    console.warn(`Page already exists: ${title}. Skipping creation.`);
+    return;
   }
   await page.goto(scrapboxUrl.toString());
   await new Promise<void>((resolve) => setTimeout(() => resolve(), 1000));
