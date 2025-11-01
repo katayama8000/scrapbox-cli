@@ -31,4 +31,8 @@ export class ScrapboxPage {
       notification.lines(this.lines);
     }
   }
+
+  getContent(): string {
+    return this.content;
+  }
 }

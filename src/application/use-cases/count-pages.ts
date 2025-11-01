@@ -51,8 +51,7 @@ export class CountPagesUseCase {
         return null;
       }
 
-      // Extract page count from content using regex
-      const match = page.toString().match(/Total pages: (\d+)/);
+      const match = page.getContent().match(/\s*Total pages: (\d+)/);
       return match ? parseInt(match[1], 10) : null;
     } catch (error) {
       console.error("Failed to fetch previous month page count:", error);
@@ -116,9 +115,9 @@ export class CountPagesUseCase {
       textItems.push(
         {
           content: `Previous month: ${stats.previousCount} pages`,
-          format: "plain",
+          format: "paragraph1",
         },
-        { content: changeText, format: "plain" },
+        { content: changeText, format: "paragraph1" },
       );
     } else {
       textItems.push({
