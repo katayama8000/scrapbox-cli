@@ -5,7 +5,7 @@ import {
   PostDailyBlogUseCase,
   PostWeeklyBlogUseCase,
 } from "@/application/use-cases/blog.ts";
-import { CalculateAverageWakeUpTimeUseCase } from "@/application/use-cases/average_wake_up_time.ts";
+import { CalculateAverageWakeUpTimeUseCase } from "@/application/use-cases/calculate_average_wake_up_time.ts";
 import { CalculateAverageSleepQualityUseCase } from "@/application/use-cases/calculate_average_sleep_quality.ts";
 import { ScrapboxRepositoryImpl } from "@/infrastructure/adapters/scrapbox/scrapbox-repository-impl.ts";
 import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl.ts";
@@ -26,36 +26,44 @@ const main = async () => {
   const scrapboxRepository = new ScrapboxRepositoryImpl(sessionId);
   const dateProvider = new DateProviderImpl();
 
-  if (command === "daily") {
-    const postDailyBlogUseCase = new PostDailyBlogUseCase(
-      scrapboxRepository,
-      dateProvider,
-    );
-    try {
-      await postDailyBlogUseCase.execute("katayama8000");
-      console.log("Successfully posted daily blog.");
-    } catch (error) {
-      console.error("Failed to post daily blog:", error);
-      Deno.exit(1);
+  switch (command) {
+    case "daily": {
+      const postDailyBlogUseCase = new PostDailyBlogUseCase(
+        scrapboxRepository,
+        dateProvider,
+      );
+      try {
+        await postDailyBlogUseCase.execute("katayama8000");
+        console.log("Successfully posted daily blog.");
+      } catch (error) {
+        console.error("Failed to post daily blog:", error);
+        Deno.exit(1);
+      }
+      break;
     }
-  } else if (command === "weekly") {
-    const calculateAverageWakeUpTimeUseCase =
-      new CalculateAverageWakeUpTimeUseCase(scrapboxRepository, dateProvider);
-    const calculateAverageSleepQualityUseCase =
-      new CalculateAverageSleepQualityUseCase(scrapboxRepository, dateProvider);
-    const postWeeklyBlogUseCase = new PostWeeklyBlogUseCase(
-      scrapboxRepository,
-      dateProvider,
-      calculateAverageWakeUpTimeUseCase,
-      calculateAverageSleepQualityUseCase,
-    );
-    try {
-      await postWeeklyBlogUseCase.execute("katayama8000");
-      console.log("Successfully posted weekly blog.");
-    } catch (error) {
-      console.error("Failed to post weekly blog:", error);
-      Deno.exit(1);
+    case "weekly": {
+      const calculateAverageWakeUpTimeUseCase =
+        new CalculateAverageWakeUpTimeUseCase(scrapboxRepository, dateProvider);
+      const calculateAverageSleepQualityUseCase =
+        new CalculateAverageSleepQualityUseCase(scrapboxRepository, dateProvider);
+      const postWeeklyBlogUseCase = new PostWeeklyBlogUseCase(
+        scrapboxRepository,
+        dateProvider,
+        calculateAverageWakeUpTimeUseCase,
+        calculateAverageSleepQualityUseCase,
+      );
+      try {
+        await postWeeklyBlogUseCase.execute("katayama8000");
+        console.log("Successfully posted weekly blog.");
+      } catch (error) {
+        console.error("Failed to post weekly blog:", error);
+        Deno.exit(1);
+      }
+      break;
     }
+    default:
+      console.error("Usage: deno task <daily|weekly>");
+      Deno.exit(1);
   }
 };
 
