@@ -4,9 +4,10 @@ import { ScrapboxPage } from "@/domain/models/scrapbox-page.ts";
 import { formatDate } from "@/infrastructure/adapters/formatters/formatDate.ts";
 import { formatTextItems } from "@/infrastructure/adapters/formatters/formatTextItems.ts";
 import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl.ts";
-import { CalculateAverageWakeUpTimeUseCase } from "@/application/use-cases/average_wake_up_time.ts";
+import { CalculateAverageWakeUpTimeUseCase } from "./calculate_average_wake_up_time.ts";
 import { CalculateAverageSleepQualityUseCase } from "@/application/use-cases/calculate_average_sleep_quality.ts";
 import { ScrapboxPayloadBuilder } from "@/infrastructure/adapters/scrapbox/scrapbox-payload-builder.ts";
+import { VisualizeWeeklyWakeUpTimeUseCase } from "./visualize_weekly_wake_up_time.ts";
 
 // Daily Blog
 const dailyTemplate = {
@@ -107,10 +108,9 @@ export class PostWeeklyBlogUseCase {
   constructor(
     private readonly scrapboxRepository: ScrapboxRepository,
     private readonly dateProvider: DateProvider,
-    private readonly calculateAverageWakeUpTimeUseCase:
-      CalculateAverageWakeUpTimeUseCase,
-    private readonly calculateAverageSleepQualityUseCase:
-      CalculateAverageSleepQualityUseCase,
+    private readonly calculateAverageWakeUpTimeUseCase: CalculateAverageWakeUpTimeUseCase,
+    private readonly calculateAverageSleepQualityUseCase: CalculateAverageSleepQualityUseCase,
+    private readonly visualizeWeeklyWakeUpTimeUseCase: VisualizeWeeklyWakeUpTimeUseCase
   ) {}
 
   async execute(projectName: string): Promise<void> {
@@ -118,10 +118,13 @@ export class PostWeeklyBlogUseCase {
     const title = weeklyTemplate.generateTitle(today);
     const connectLinkText = this.getConnectLinkText(today);
     const avgWakeUpTime = await this.calculateAverageWakeUpTimeUseCase.execute(
-      projectName,
+      projectName
     );
-    const avgSleepQuality = await this.calculateAverageSleepQualityUseCase
-      .execute(projectName);
+    const avgSleepQuality =
+      await this.calculateAverageSleepQualityUseCase.execute(projectName);
+    const wakeUpTimeVisualization =
+      await this.visualizeWeeklyWakeUpTimeUseCase.execute(projectName);
+    console.log("Wake-up Time Visualization:\n", wakeUpTimeVisualization);
     const content = weeklyTemplate.buildText(
       connectLinkText,
       avgWakeUpTime,
@@ -138,20 +141,18 @@ export class PostWeeklyBlogUseCase {
       throw new Error(`Page already exists: ${pageTitle}`);
     }
 
-    await this.scrapboxRepository.post(page);
+    // await this.scrapboxRepository.post(page);
   }
 
   private getConnectLinkText(date: Date): string {
     const dayjs = DateProviderImpl.getDayjs();
     const d = dayjs(date);
     const isSunday = d.day() === 0;
-    const startOfWeek = isSunday ? d.add(1, "day") : d.add(8 - d.day(), "day");
-    const endOfWeek = startOfWeek.add(6, "day");
-    return `${formatDate(startOfWeek, "yyyy/M/d")}~${
-      formatDate(
-        endOfWeek,
-        "yyyy/M/d",
-      )
-    }`;
+    const startOfWeek = isSunday ? d.add(1, 'day') : d.add(8 - d.day(), 'day');
+    const endOfWeek = startOfWeek.add(6, 'day');
+    return `${formatDate(startOfWeek, 'yyyy/M/d')}~${formatDate(
+      endOfWeek,
+      'yyyy/M/d'
+    )}`;
   }
 }

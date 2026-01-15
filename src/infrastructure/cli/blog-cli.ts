@@ -1,3 +1,4 @@
+
 /// <reference lib="deno.ns" />
 
 import "dotenv/load.ts";
@@ -7,6 +8,7 @@ import {
 } from "@/application/use-cases/blog.ts";
 import { CalculateAverageWakeUpTimeUseCase } from "@/application/use-cases/calculate_average_wake_up_time.ts";
 import { CalculateAverageSleepQualityUseCase } from "@/application/use-cases/calculate_average_sleep_quality.ts";
+import { VisualizeWeeklyWakeUpTimeUseCase } from "@/application/use-cases/visualize_weekly_wake_up_time.ts";
 import { ScrapboxRepositoryImpl } from "@/infrastructure/adapters/scrapbox/scrapbox-repository-impl.ts";
 import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl.ts";
 
@@ -46,11 +48,14 @@ const main = async () => {
         new CalculateAverageWakeUpTimeUseCase(scrapboxRepository, dateProvider);
       const calculateAverageSleepQualityUseCase =
         new CalculateAverageSleepQualityUseCase(scrapboxRepository, dateProvider);
+      const visualizeWeeklyWakeUpTimeUseCase = 
+        new VisualizeWeeklyWakeUpTimeUseCase(scrapboxRepository, dateProvider);
       const postWeeklyBlogUseCase = new PostWeeklyBlogUseCase(
         scrapboxRepository,
         dateProvider,
         calculateAverageWakeUpTimeUseCase,
         calculateAverageSleepQualityUseCase,
+        visualizeWeeklyWakeUpTimeUseCase,
       );
       try {
         await postWeeklyBlogUseCase.execute("katayama8000");
@@ -71,3 +76,4 @@ main().catch((e) => {
   console.error(e);
   Deno.exit(1);
 });
+
