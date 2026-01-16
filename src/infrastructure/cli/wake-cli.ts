@@ -1,7 +1,7 @@
 /// <reference lib="deno.ns" />
 
 import "dotenv/load.ts";
-import { CalculateAverageWakeUpTimeUseCase } from "@/application/use-cases/average_wake_up_time.ts";
+import { CalculateAverageWakeUpTimeUseCase } from "@/application/use-cases/calculate_average_wake_up_time.ts";
 import { ScrapboxRepositoryImpl } from "@/infrastructure/adapters/scrapbox/scrapbox-repository-impl.ts";
 import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl.ts";
 

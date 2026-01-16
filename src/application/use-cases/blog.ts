@@ -4,7 +4,7 @@ import { ScrapboxPage } from "@/domain/models/scrapbox-page.ts";
 import { formatDate } from "@/infrastructure/adapters/formatters/formatDate.ts";
 import { formatTextItems } from "@/infrastructure/adapters/formatters/formatTextItems.ts";
 import { DateProviderImpl } from "@/infrastructure/adapters/date/date-provider-impl.ts";
-import { CalculateAverageWakeUpTimeUseCase } from "@/application/use-cases/average_wake_up_time.ts";
+import { CalculateAverageWakeUpTimeUseCase } from '@/application/use-cases/calculate_average_wake_up_time.ts';
 import { CalculateAverageSleepQualityUseCase } from "@/application/use-cases/calculate_average_sleep_quality.ts";
 import { ScrapboxPayloadBuilder } from "@/infrastructure/adapters/scrapbox/scrapbox-payload-builder.ts";
 
