@@ -13,7 +13,7 @@ const dailyTemplate = {
       { content: "Today's Tasks", format: "medium" },
       {
         content: "https://tatsufumi.backlog.com/board/FAMILY",
-        format: "nestedPlain",
+        format: "plain",
       },
       { content: "Score sleep quality", format: "medium" },
       { content: "How was the day?", format: "medium" },
