@@ -26,4 +26,4 @@ export class GenerativeAIProviderImpl implements GenerativeAIProvider {
 }
 
 const summaryTemplate = (v: string) =>
-  `You do not need to mention average wake-up time and average sleep quality and Today's Tasks, and I want to summarize it in one paragraph and you to tell me what I should focus on next. Please follow the scrapbox format using 「>」 in every line and write in English. The content is below:\n\n${v}`;
+  `Summarize the content in one paragraph and tell me what I should focus on next. Do not collect, restate, or include items that are already covered by the template (average wake-up time, average sleep quality, and Today's Tasks). Please follow Scrapbox format by starting every line with 「>」 and write in English. The content is below:\n\n${v}`;
