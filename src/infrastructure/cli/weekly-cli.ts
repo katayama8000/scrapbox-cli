@@ -16,8 +16,9 @@ const main = async () => {
     Deno.exit(1);
   }
   if (!geminiApiKey) {
-    console.error("Please set the GEMINI_API_KEY environment variable.");
-    Deno.exit(1);
+    console.warn(
+      "GEMINI_API_KEY is not set. The weekly page will be created without an AI-generated summary.",
+    );
   }
 
   const scrapboxRepository = new ScrapboxRepositoryImpl(sessionId);
@@ -27,7 +28,7 @@ const main = async () => {
     new CalculateAverageWakeUpTimeUseCase(scrapboxRepository, dateProvider);
   const calculateAverageSleepQualityUseCase =
     new CalculateAverageSleepQualityUseCase(scrapboxRepository, dateProvider);
-  const generativeAIProvider = new GenerativeAIProviderImpl(geminiApiKey);
+  const generativeAIProvider = new GenerativeAIProviderImpl(geminiApiKey ?? "");
   const postWeeklyBlogUseCase = new PostWeeklyBlogUseCase(
     scrapboxRepository,
     dateProvider,
