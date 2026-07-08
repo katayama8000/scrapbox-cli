@@ -88,7 +88,17 @@ export class PostWeeklyBlogUseCase {
       })
       .join("\n\n");
 
-    const summary = await this.generativeAIProvider.generateContentEn(prompt);
+    let summary: string;
+    try {
+      summary = await this.generativeAIProvider.generateContentEn(prompt);
+    } catch (error) {
+      console.error(
+        "Failed to generate summary with generative AI. Creating page without summary.",
+        error,
+      );
+      summary =
+        "AI summary generation failed. Please check the related pages for details.";
+    }
 
     const content = weeklyTemplate.buildText(
       connectLinkText,
