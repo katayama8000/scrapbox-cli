@@ -97,13 +97,9 @@ export class PostWeeklyBlogUseCase {
     );
     const avgSleepQuality = await this.calculateAverageSleepQualityUseCase
       .execute(projectName);
-    const pageTitles = await this.listPageTitlesCreatedThisWeek(
+    const relatedPages = await this.listPagesCreatedThisWeek(
       projectName,
       today,
-    );
-    const relatedPages = await this.scrapboxRepository.listPagesByPageTitle(
-      projectName,
-      pageTitles,
     );
     if (!relatedPages || relatedPages === null || relatedPages.length === 0) {
       throw new Error("No related pages found for this week.");
@@ -157,10 +153,10 @@ export class PostWeeklyBlogUseCase {
     }`;
   }
 
-  private async listPageTitlesCreatedThisWeek(
+  private async listPagesCreatedThisWeek(
     projectName: string,
     date: Date,
-  ): Promise<string[]> {
+  ): Promise<ScrapboxPage[]> {
     const pages = await this.scrapboxRepository.listPages(projectName);
     if (!pages || pages.length === 0) {
       return [];
@@ -175,8 +171,7 @@ export class PostWeeklyBlogUseCase {
         }
         const time = createdAt.getTime();
         return time >= startDate.getTime() && time <= endDate.getTime();
-      })
-      .map((page) => page.getTitle());
+      });
   }
 
   private getThisWeekRange(date: Date): [Date, Date] {
