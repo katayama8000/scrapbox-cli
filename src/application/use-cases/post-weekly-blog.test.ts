@@ -54,6 +54,11 @@ Deno.test("weeklyTemplate.buildSummaryPrompt includes guidance and articles", ()
     prompt,
     "write one connected summary in English",
   );
+  assertStringIncludes(
+    prompt,
+    "Write exactly one paragraph with 4-6 sentences.",
+  );
+  assertStringIncludes(prompt, "overall weekly theme");
   assertStringIncludes(prompt, "Article 1: 2026/07/21");
   assertStringIncludes(prompt, "Article 2: 2026/07/22");
   assertStringIncludes(prompt, "Return only the final summary paragraph.");
