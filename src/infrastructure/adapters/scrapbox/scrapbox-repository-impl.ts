@@ -9,6 +9,21 @@ import { ScrapboxPayloadBuilder } from "./scrapbox-payload-builder.ts";
 export class ScrapboxRepositoryImpl implements ScrapboxRepository {
   constructor(private readonly sessionId: string) {}
 
+  private parseCreatedAt(created?: number): Date | null {
+    if (typeof created !== "number" || Number.isNaN(created)) {
+      return null;
+    }
+
+    const milliseconds = created < 1_000_000_000_000 ? created * 1000 : created;
+    const createdAt = new Date(milliseconds);
+
+    if (Number.isNaN(createdAt.getTime())) {
+      return null;
+    }
+
+    return createdAt;
+  }
+
   private parseTextLine(pageText: string): string[] {
     const parsedPage = parse(pageText, { hasTitle: true });
     return parsedPage
@@ -93,6 +108,7 @@ export class ScrapboxRepositoryImpl implements ScrapboxRepository {
     type ScrapboxPageListItem = {
       title: string;
       lines?: string[];
+      created?: number;
     };
     const fetchAllPages = async (
       skip: number,
@@ -115,6 +131,7 @@ export class ScrapboxRepositoryImpl implements ScrapboxRepository {
           projectName,
           title: item.title,
           content: item.lines?.join("\n") ?? "",
+          createdAt: this.parseCreatedAt(item.created),
         });
       });
       const nextPages = pages.concat(fetchedPages);

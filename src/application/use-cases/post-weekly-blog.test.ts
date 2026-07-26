@@ -1,5 +1,6 @@
-import { assertEquals } from "std/assert/mod.ts";
+import { assertEquals, assertStringIncludes } from "std/assert/mod.ts";
 import { weeklyTemplate } from "./post-weekly-blog.ts";
+import { ScrapboxPage } from "@/domain/models/scrapbox-page.ts";
 
 Deno.test("weeklyTemplate.buildText generates correct text", () => {
   const connectLink = "test-link";
@@ -35,36 +36,25 @@ Deno.test(
   },
 );
 
-Deno.test(
-  "weeklyTemplate.generateTitlesForThisWeek generates correct titles for the week starting from Sunday",
-  () => {
-    const date = new Date("2026-02-22T00:00:00Z"); // Sunday
-    const expected = [
-      "2026/02/21 (Sat)",
-      "2026/02/20 (Fri)",
-      "2026/02/19 (Thu)",
-      "2026/02/18 (Wed)",
-      "2026/02/17 (Tue)",
-      "2026/02/16 (Mon)",
-    ];
-    const result = weeklyTemplate.generateTitlesForThisWeek(date);
-    assertEquals(result, expected);
-  },
-);
+Deno.test("weeklyTemplate.buildSummaryPrompt includes guidance and articles", () => {
+  const page1 = ScrapboxPage.reconstruct({
+    projectName: "katayama8000",
+    title: "2026/07/21",
+    content: "Built feature A",
+  });
+  const page2 = ScrapboxPage.reconstruct({
+    projectName: "katayama8000",
+    title: "2026/07/22",
+    content: "Fixed issue B",
+  });
 
-Deno.test(
-  "weeklyTemplate.generateTitlesForThisWeek generates correct titles for the previous 6 days",
-  () => {
-    const date = new Date("2026-02-25T00:00:00Z"); // Wednesday
-    const expected = [
-      "2026/02/24 (Tue)",
-      "2026/02/23 (Mon)",
-      "2026/02/22 (Sun)",
-      "2026/02/21 (Sat)",
-      "2026/02/20 (Fri)",
-      "2026/02/19 (Thu)",
-    ];
-    const result = weeklyTemplate.generateTitlesForThisWeek(date);
-    assertEquals(result, expected);
-  },
-);
+  const prompt = weeklyTemplate.buildSummaryPrompt([page1, page2]);
+
+  assertStringIncludes(
+    prompt,
+    "write one connected summary in English",
+  );
+  assertStringIncludes(prompt, "Article 1: 2026/07/21");
+  assertStringIncludes(prompt, "Article 2: 2026/07/22");
+  assertStringIncludes(prompt, "Return only the final summary paragraph.");
+});
