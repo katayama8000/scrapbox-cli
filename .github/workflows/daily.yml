@@ -2,8 +2,8 @@ name: Daily CLI
 
 on:
   schedule:
-    # every day except Sunday at 9:00 JST (01:00 UTC)
-    - cron: "0 0 * * 1-6"
+    # every day at 7:00 JST (22:00 UTC)
+    - cron: "0 22 * * *"
   workflow_dispatch:
 
 jobs:

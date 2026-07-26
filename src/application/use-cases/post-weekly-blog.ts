@@ -44,12 +44,36 @@ export const weeklyTemplate = {
       )
     }`;
   },
-  generateTitlesForThisWeek: (date: Date): string[] => {
-    const dayjs = DateProviderImpl.getDayjs();
-    const d = dayjs(date);
-    return Array.from({ length: 6 }).map((_, i) =>
-      formatDate(d.subtract(i + 1, "day"), "yyyy/M/d (ddd)")
-    );
+  buildSummaryPrompt: (pages: ScrapboxPage[]): string => {
+    const articleBlocks = pages
+      .map((page, index) => {
+        return [
+          `Article ${index + 1}: ${page.getTitle()}`,
+          "Body:",
+          page.getContent(),
+        ].join("\n");
+      })
+      .join("\n\n");
+
+    return [
+      "You are preparing a coherent weekly reflection from multiple notes.",
+      "Read all articles and write one connected summary in English.",
+      "Requirements:",
+      "- Write exactly one paragraph with 4-6 sentences.",
+      "- Organize the paragraph in this order:",
+      "  1) overall weekly theme, 2) concrete progress/examples, 3) challenges and learnings, 4) short closing insight.",
+      "- Cover major themes shared across the week.",
+      "- Mention concrete progress, challenges, and notable learnings.",
+      "- Keep the flow natural as one narrative, not a bullet list.",
+      "- Use transition words so each sentence connects logically (for example: first, then, however, finally).",
+      "- Keep it concise (about 110-160 words).",
+      "- Do not add information that is not present in the articles.",
+      "",
+      "Articles:",
+      articleBlocks,
+      "",
+      "Return only the final summary paragraph.",
+    ].join("\n");
   },
 };
 
@@ -73,20 +97,15 @@ export class PostWeeklyBlogUseCase {
     );
     const avgSleepQuality = await this.calculateAverageSleepQualityUseCase
       .execute(projectName);
-    const pageTitles = weeklyTemplate.generateTitlesForThisWeek(today);
-    const relatedPages = await this.scrapboxRepository.listPagesByPageTitle(
+    const relatedPages = await this.listPagesCreatedThisWeek(
       projectName,
-      pageTitles,
+      today,
     );
     if (!relatedPages || relatedPages === null || relatedPages.length === 0) {
       throw new Error("No related pages found for this week.");
     }
 
-    const prompt = relatedPages
-      .map((page) => {
-        return `Title: ${page.getTitle()}\nContent:\n${page.getContent()}`;
-      })
-      .join("\n\n");
+    const prompt = weeklyTemplate.buildSummaryPrompt(relatedPages);
 
     let summary: string;
     try {
@@ -132,5 +151,40 @@ export class PostWeeklyBlogUseCase {
         "yyyy/M/d",
       )
     }`;
+  }
+
+  private async listPagesCreatedThisWeek(
+    projectName: string,
+    date: Date,
+  ): Promise<ScrapboxPage[]> {
+    const pages = await this.scrapboxRepository.listPages(projectName);
+    if (!pages || pages.length === 0) {
+      return [];
+    }
+
+    const [startDate, endDate] = this.getThisWeekRange(date);
+    return pages
+      .filter((page) => {
+        const createdAt = page.getCreatedAt();
+        if (!createdAt) {
+          return false;
+        }
+        const time = createdAt.getTime();
+        return time >= startDate.getTime() && time <= endDate.getTime();
+      });
+  }
+
+  private getThisWeekRange(date: Date): [Date, Date] {
+    const dayjs = DateProviderImpl.getDayjs();
+    const today = dayjs(date);
+    const day = today.day();
+    const startOfWeek = day === 0
+      ? today.subtract(6, "day")
+      : today.subtract(day - 1, "day");
+
+    return [
+      startOfWeek.startOf("day").toDate(),
+      startOfWeek.add(6, "day").endOf("day").toDate(),
+    ];
   }
 }
